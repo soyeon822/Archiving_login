@@ -1,0 +1,2594 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>올블루 0LLBLUE — 웹툰·애니 발견의 바다</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+<style>
+:root{
+  --bg:#ffffff;
+  --bg-soft:#f4f5f7;
+  --bg-soft2:#eceef1;
+  --ink:#16171a;
+  --ink-2:#5b626b;
+  --ink-3:#959ba3;
+  --line:#e8eaed;
+  --line-2:#d9dce0;
+  --accent:#ff2e63;      /* 왓챠 스타일 핑크레드 — 주요 액션/평점 */
+  --accent-deep:#e11551;
+  --accent-soft:#ffe7ee;
+  --blue:#0a66ff;        /* 올블루 오션 */
+  --blue-2:#00c6ff;
+  --gold:#ffaf1a;
+  --shadow:0 2px 8px rgba(20,25,40,.06), 0 8px 28px rgba(20,25,40,.05);
+  --shadow-lg:0 12px 40px rgba(20,25,40,.14);
+  --r:16px; --r-sm:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:"Pretendard","Pretendard Variable",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  background:var(--bg-soft); color:var(--ink); -webkit-font-smoothing:antialiased;
+  line-height:1.5;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input{font-family:inherit}
+img{display:block}
+.app{max-width:1180px;margin:0 auto}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- TOP BAR ---------- */
+.topbar{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.86);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:18px;padding:13px 20px}
+.logo{display:flex;align-items:center;gap:9px;cursor:pointer;flex-shrink:0}
+.logo .mark{width:30px;height:30px;border-radius:9px;
+  background:linear-gradient(135deg,var(--blue) 0%,var(--blue-2) 100%);
+  display:grid;place-items:center;color:#fff;font-weight:900;font-size:15px;
+  box-shadow:0 4px 12px rgba(10,102,255,.35)}
+.logo .word{font-weight:900;font-size:21px;letter-spacing:-.5px;
+  background:linear-gradient(135deg,var(--blue) 10%,var(--blue-2) 95%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.logo .word small{display:block;font-size:9.5px;font-weight:700;letter-spacing:1.5px;
+  color:var(--ink-3);-webkit-text-fill-color:var(--ink-3);margin-top:-3px}
+.search{flex:1;max-width:440px;position:relative}
+.search input{width:100%;background:var(--bg-soft);border:1.5px solid transparent;border-radius:999px;
+  padding:10px 16px 10px 40px;font-size:14px;color:var(--ink);transition:.18s}
+.search input:focus{outline:none;background:#fff;border-color:var(--blue)}
+.search .ic{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--ink-3);font-size:15px}
+.topbar .spacer{flex:1}
+.avatar{width:34px;height:34px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#ff7eb3,#ff2e63);color:#fff;display:grid;place-items:center;
+  font-weight:800;font-size:14px;cursor:pointer;border:2px solid #fff;box-shadow:var(--shadow)}
+
+/* ---------- TABS ---------- */
+.tabs{position:sticky;top:57px;z-index:55;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line)}
+.tabs-inner{max-width:1180px;margin:0 auto;display:flex;gap:4px;padding:0 14px;overflow-x:auto;scrollbar-width:none}
+.tabs-inner::-webkit-scrollbar{display:none}
+.tab{padding:14px 16px;font-size:15px;font-weight:600;color:var(--ink-2);position:relative;white-space:nowrap;transition:.15s}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--ink);font-weight:800}
+.tab.active::after{content:"";position:absolute;left:14px;right:14px;bottom:-1px;height:3px;border-radius:3px 3px 0 0;
+  background:var(--accent)}
+.tab .dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--accent);
+  vertical-align:super;margin-left:2px}
+
+/* ---------- LAYOUT ---------- */
+.view{padding:26px 20px 80px;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.section{margin-bottom:38px}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px}
+.section-head h2{font-size:20px;font-weight:800;letter-spacing:-.4px}
+.section-head .sub{font-size:13px;color:var(--ink-3);font-weight:500}
+.section-head .more{font-size:13px;color:var(--ink-2);font-weight:600}
+
+/* ---------- POSTER GRID ---------- */
+.grid{display:grid;gap:18px 16px}
+.grid.works{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.poster-card{cursor:pointer;transition:.2s}
+.poster-card:hover{transform:translateY(-4px)}
+.poster{position:relative;aspect-ratio:3/4.2;border-radius:var(--r-sm);overflow:hidden;
+  box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:flex-end;padding:12px;color:#fff}
+.poster::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 35%,rgba(0,0,0,.55) 100%)}
+.poster .ptitle{position:relative;z-index:2;font-weight:800;font-size:15px;line-height:1.25;
+  text-shadow:0 1px 6px rgba(0,0,0,.4)}
+.poster .ptype{position:relative;z-index:2;font-size:11px;font-weight:600;opacity:.92;margin-top:3px}
+.poster .badge{position:absolute;top:9px;left:9px;z-index:3;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
+  font-size:10.5px;font-weight:700;padding:3px 7px;border-radius:6px}
+.poster .savedmark{position:absolute;top:8px;right:8px;z-index:3;width:26px;height:26px;border-radius:50%;
+  background:rgba(255,46,99,.92);display:none;place-items:center;font-size:13px}
+.poster.saved .savedmark{display:grid}
+.poster-card .meta{margin-top:9px}
+.poster-card .meta .t{font-weight:700;font-size:14px;letter-spacing:-.2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.poster-card .meta .r{font-size:12.5px;color:var(--ink-2);margin-top:2px;font-weight:600}
+.star-mini{color:var(--accent)}
+
+/* ---------- CARD / CHIP ---------- */
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.chip{display:inline-flex;align-items:center;gap:4px;background:var(--bg-soft);color:var(--ink-2);
+  font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:999px;transition:.15s}
+button.chip{cursor:pointer}
+button.chip:hover{background:var(--bg-soft2)}
+.chip.tag{color:var(--blue);background:#eef4ff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;font-weight:700;font-size:14px;
+  border-radius:11px;padding:12px 18px;transition:.15s;border:1.5px solid transparent}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-deep)}
+.btn-ghost{background:var(--bg-soft);color:var(--ink)}
+.btn-ghost:hover{background:var(--bg-soft2)}
+.btn-line{background:#fff;border-color:var(--line-2);color:var(--ink)}
+.btn-line:hover{border-color:var(--ink-3)}
+.btn-line.on{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-blue:hover{filter:brightness(.94)}
+
+/* ---------- HOME HERO ---------- */
+.hero{position:relative;border-radius:22px;overflow:hidden;color:#fff;padding:40px 36px;margin-bottom:34px;
+  background:radial-gradient(120% 140% at 8% 10%,#0a66ff 0%,#063e9e 45%,#021b4a 100%)}
+.hero::before{content:"";position:absolute;right:-60px;top:-40px;width:340px;height:340px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,198,255,.5),transparent 65%);filter:blur(8px)}
+.hero .eyebrow{font-size:13px;font-weight:700;letter-spacing:1px;color:#9fd1ff;position:relative}
+.hero h1{font-size:34px;font-weight:900;letter-spacing:-1px;margin:8px 0 10px;position:relative;line-height:1.15}
+.hero p{font-size:15px;color:#cfe1ff;max-width:540px;position:relative}
+.hero .northstar{display:flex;gap:14px;margin-top:24px;position:relative;flex-wrap:wrap}
+.ns{background:rgba(255,255,255,.12);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.18);
+  border-radius:14px;padding:14px 18px;min-width:150px}
+.ns .lab{font-size:11.5px;color:#bcd6ff;font-weight:600}
+.ns .num{font-size:26px;font-weight:900;margin-top:2px;letter-spacing:-.5px}
+.ns .num small{font-size:13px;font-weight:700;color:#bcd6ff}
+.ns .delta{font-size:11.5px;font-weight:700;color:#7dffc0;margin-top:1px}
+
+/* reco card with reason */
+.reco-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.reco{display:flex;gap:13px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px;
+  box-shadow:var(--shadow);cursor:pointer;transition:.18s}
+.reco:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.reco .pp{width:66px;height:90px;border-radius:8px;flex-shrink:0;color:#fff;display:flex;align-items:flex-end;
+  padding:6px;font-weight:800;font-size:11px}
+.reco .info{min-width:0}
+.reco .info .t{font-weight:800;font-size:15px}
+.reco .info .why{font-size:12.5px;color:var(--accent);font-weight:700;margin-top:5px;display:flex;align-items:center;gap:4px}
+.reco .info .desc{font-size:12.5px;color:var(--ink-2);margin-top:4px;line-height:1.45}
+
+/* curator post */
+.curator{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.curator .top{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.mini-av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:13px}
+.badge-pill{font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:999px;color:#fff}
+.curator .q{font-size:14.5px;font-weight:600;line-height:1.55}
+.curator .foot{display:flex;gap:16px;margin-top:11px;color:var(--ink-2);font-size:13px;font-weight:600}
+.curator .foot button:hover{color:var(--accent)}
+
+/* ---------- WORK DETAIL ---------- */
+.back{display:inline-flex;align-items:center;gap:6px;font-weight:700;color:var(--ink-2);margin-bottom:18px;font-size:14px}
+.back:hover{color:var(--ink)}
+.detail-hero{display:grid;grid-template-columns:230px 1fr;gap:30px;margin-bottom:34px}
+.detail-poster{aspect-ratio:3/4.2;border-radius:14px;box-shadow:var(--shadow-lg);color:#fff;
+  display:flex;align-items:flex-end;padding:16px;font-weight:900;font-size:20px;line-height:1.2;
+  text-shadow:0 2px 8px rgba(0,0,0,.4)}
+.detail-info h1{font-size:30px;font-weight:900;letter-spacing:-.8px;line-height:1.15}
+.detail-info .meta-line{color:var(--ink-2);font-size:14px;font-weight:600;margin-top:8px}
+.rating-block{display:flex;align-items:center;gap:22px;margin:18px 0;flex-wrap:wrap}
+.rating-block .avg{display:flex;align-items:baseline;gap:8px}
+.rating-block .avg .n{font-size:34px;font-weight:900;color:var(--accent);letter-spacing:-1px}
+.rating-block .avg .c{font-size:13px;color:var(--ink-3);font-weight:600}
+.myrate{display:flex;flex-direction:column;gap:4px}
+.myrate .lab{font-size:12px;color:var(--ink-3);font-weight:600}
+.stars{display:flex;gap:2px;font-size:26px;color:var(--line-2);cursor:pointer}
+.stars .s{transition:.1s}
+.stars .s.on{color:var(--accent)}
+.stars .s:hover{transform:scale(1.12)}
+.action-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.tag-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:18px}
+
+.detail-grid{display:grid;grid-template-columns:1fr 320px;gap:26px;align-items:start}
+@media(max-width:860px){.detail-grid{grid-template-columns:1fr}.detail-hero{grid-template-columns:140px 1fr;gap:18px}}
+.block{margin-bottom:30px}
+.block h3{font-size:17px;font-weight:800;margin-bottom:12px;letter-spacing:-.3px}
+.synopsis{font-size:14.5px;color:var(--ink);line-height:1.7}
+.info-table{width:100%;border-collapse:collapse;font-size:14px}
+.info-table td{padding:10px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.info-table td.k{color:var(--ink-3);font-weight:600;width:96px}
+.info-table td.v{font-weight:600}
+.platforms{display:flex;gap:10px;flex-wrap:wrap}
+.plat{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:11px;padding:10px 14px;
+  font-weight:700;font-size:13.5px;cursor:pointer;transition:.15s}
+.plat:hover{border-color:var(--ink-3)}
+.plat .pill{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:800}
+
+/* timeline */
+.tl-toggle{display:flex;gap:6px;margin-bottom:14px}
+.tl-toggle button{font-size:13px;font-weight:700;padding:7px 14px;border-radius:999px;background:var(--bg-soft);color:var(--ink-2)}
+.tl-toggle button.on{background:var(--ink);color:#fff}
+.tl-item{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--line)}
+.tl-item .no{width:26px;height:26px;border-radius:8px;background:var(--bg-soft);display:grid;place-items:center;
+  font-weight:800;font-size:13px;color:var(--ink-2);flex-shrink:0}
+.tl-item .name{font-weight:700;font-size:14.5px}
+.tl-item .sub{margin-left:auto;font-size:12.5px;color:var(--ink-3);font-weight:600}
+
+/* reco mini cards in sidebar */
+.side-card{padding:18px}
+.reco-mini{display:flex;gap:11px;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.reco-mini:last-child{border-bottom:none}
+.reco-mini:hover .t{color:var(--accent)}
+.reco-mini .pp{width:44px;height:60px;border-radius:7px;flex-shrink:0}
+.reco-mini .t{font-weight:700;font-size:13.5px;transition:.15s}
+.reco-mini .s{font-size:11.5px;color:var(--ink-3);margin-top:2px;font-weight:600}
+.reco-mini .match{font-size:11.5px;color:var(--blue);font-weight:700;margin-top:3px}
+
+/* comment */
+.cmt-input{background:var(--bg-soft);border-radius:12px;padding:14px}
+.cmt-input textarea{width:100%;border:none;background:transparent;resize:none;font-size:14px;min-height:46px;color:var(--ink)}
+.cmt-input textarea:focus{outline:none}
+.cmt-input .row{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.cmt{padding:16px 0;border-bottom:1px solid var(--line)}
+.cmt .head{display:flex;align-items:center;gap:9px}
+.cmt .nm{font-weight:800;font-size:14px}
+.cmt .stars-sm{color:var(--accent);font-size:13px;font-weight:700}
+.cmt .body{font-size:14px;margin:9px 0;line-height:1.6}
+.cmt .reco-tag{font-size:12.5px;color:var(--blue);font-weight:700;background:#eef4ff;display:inline-block;padding:4px 10px;border-radius:8px;margin-bottom:9px}
+.cmt .foot{display:flex;gap:16px;color:var(--ink-2);font-size:13px;font-weight:600}
+.cmt .foot button:hover{color:var(--accent)}
+
+/* ---------- CONTENT HALL ---------- */
+.hall-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.hall-card{position:relative;border-radius:18px;padding:22px;color:#fff;overflow:hidden;cursor:pointer;
+  min-height:150px;display:flex;flex-direction:column;justify-content:space-between;transition:.2s;box-shadow:var(--shadow)}
+.hall-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.hall-card .emo{font-size:30px}
+.hall-card h3{font-size:18px;font-weight:900;margin-top:auto;letter-spacing:-.4px}
+.hall-card p{font-size:13px;opacity:.92;margin-top:4px;line-height:1.4}
+.hall-card .live{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.22);font-size:11px;
+  font-weight:800;padding:4px 9px;border-radius:999px;display:flex;align-items:center;gap:5px}
+.hall-card .live::before{content:"";width:6px;height:6px;border-radius:50%;background:#fff;animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.3}}
+
+/* ---------- MODAL ---------- */
+.modal-bg{position:fixed;inset:0;z-index:100;background:rgba(15,20,35,.55);backdrop-filter:blur(4px);
+  display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
+.modal-bg.open{display:flex;animation:fade .2s}
+.modal{background:#fff;border-radius:22px;max-width:560px;width:100%;box-shadow:var(--shadow-lg);
+  animation:pop .25s cubic-bezier(.2,.8,.3,1.2);margin:auto 0}
+@keyframes pop{from{transform:scale(.94) translateY(10px);opacity:0}to{transform:none;opacity:1}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 22px 0}
+.modal-head h2{font-size:19px;font-weight:900;letter-spacing:-.4px}
+.modal-head .x{width:32px;height:32px;border-radius:50%;background:var(--bg-soft);display:grid;place-items:center;font-size:16px;color:var(--ink-2)}
+.modal-head .x:hover{background:var(--bg-soft2)}
+.modal-body{padding:18px 22px 24px}
+
+/* worldcup */
+.wc-stage{text-align:center}
+.wc-round{font-size:13px;font-weight:800;color:var(--accent);margin-bottom:14px}
+.wc-pair{display:grid;grid-template-columns:1fr 40px 1fr;align-items:center;gap:8px}
+.wc-pick{cursor:pointer;border-radius:14px;overflow:hidden;transition:.15s}
+.wc-pick:hover{transform:scale(1.03)}
+.wc-pick .img{aspect-ratio:3/4;display:flex;align-items:flex-end;padding:12px;color:#fff;font-weight:800;font-size:16px;
+  text-shadow:0 2px 6px rgba(0,0,0,.4)}
+.wc-pick .nm{padding:10px;font-weight:800;font-size:14px;background:var(--bg-soft)}
+.wc-vs{font-weight:900;color:var(--ink-3);font-size:15px}
+.wc-prog{height:6px;background:var(--bg-soft);border-radius:999px;margin-bottom:18px;overflow:hidden}
+.wc-prog i{display:block;height:100%;background:var(--accent);border-radius:999px;transition:.3s}
+
+/* bar chart */
+.bar-row{margin-bottom:16px}
+.bar-row .lab{display:flex;justify-content:space-between;font-size:13.5px;font-weight:700;margin-bottom:6px}
+.bar-row .lab .v{color:var(--ink-2)}
+.bar-track{height:34px;background:var(--bg-soft);border-radius:9px;overflow:hidden}
+.bar-fill{height:100%;border-radius:9px;transition:width .5s cubic-bezier(.2,.8,.3,1);min-width:8px}
+.boost{margin-top:10px}
+
+/* tag vote */
+.tv-input{display:flex;gap:8px;margin-bottom:16px}
+.tv-input input{flex:1;border:1.5px solid var(--line-2);border-radius:11px;padding:11px 14px;font-size:14px}
+.tv-input input:focus{outline:none;border-color:var(--blue)}
+.tv-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.tv-item .rank{font-weight:900;color:var(--ink-3);width:18px;font-size:14px}
+.tv-item .tg{flex:1;font-weight:700;color:var(--blue);font-size:14px}
+.tv-item .cnt{font-weight:800;font-size:14px;color:var(--ink-2);min-width:42px;text-align:right}
+.tv-item .up{width:34px;height:34px;border-radius:9px;background:var(--bg-soft);display:grid;place-items:center;font-size:14px}
+.tv-item .up:hover{background:var(--accent-soft);color:var(--accent)}
+
+/* attendance */
+.att-week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin:6px 0 18px}
+.att-day{aspect-ratio:1;border-radius:12px;background:var(--bg-soft);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:3px;font-weight:700;position:relative}
+.att-day .d{font-size:11px;color:var(--ink-3)}
+.att-day .n{font-size:15px}
+.att-day.done{background:var(--accent);color:#fff}
+.att-day.done .d{color:rgba(255,255,255,.8)}
+.att-day.today{box-shadow:0 0 0 2.5px var(--blue) inset}
+
+/* ranking predict */
+.rk-item{display:flex;align-items:center;gap:12px;background:var(--bg-soft);border-radius:12px;padding:11px 14px;margin-bottom:9px}
+.rk-item .pp{width:38px;height:50px;border-radius:7px;flex-shrink:0}
+.rk-item .nm{flex:1;font-weight:700;font-size:14px}
+.rk-item .ar{display:flex;flex-direction:column;gap:2px}
+.rk-item .ar button{width:26px;height:18px;border-radius:5px;background:#fff;display:grid;place-items:center;font-size:10px;color:var(--ink-2)}
+.rk-item .ar button:hover{color:var(--blue)}
+.rk-item .pos{font-weight:900;color:var(--accent);width:22px;text-align:center}
+
+/* scenes */
+.scene-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.scene{aspect-ratio:16/10;border-radius:12px;display:grid;place-items:center;color:#fff;font-size:22px;position:relative;overflow:hidden}
+.scene .cap{position:absolute;bottom:8px;left:10px;font-size:12px;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.4)}
+
+/* ---------- FOLLOW ---------- */
+.feed{display:flex;flex-direction:column;gap:16px;max-width:680px}
+.feed-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow)}
+.feed-card .top{display:flex;align-items:center;gap:11px;margin-bottom:13px}
+.feed-card .top .nm{font-weight:800;font-size:15px}
+.feed-card .top .act{font-size:12.5px;color:var(--ink-3);font-weight:600}
+.feed-card .top .fbtn{margin-left:auto;font-size:13px;font-weight:700;padding:7px 16px;border-radius:999px;
+  border:1.5px solid var(--line-2);color:var(--ink)}
+.feed-card .top .fbtn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.feed-attach{display:flex;gap:13px;background:var(--bg-soft);border-radius:12px;padding:13px;cursor:pointer}
+.feed-attach:hover{background:var(--bg-soft2)}
+.feed-attach .pp{width:56px;height:76px;border-radius:8px;flex-shrink:0;color:#fff;font-weight:800;font-size:10px;display:flex;align-items:flex-end;padding:5px}
+.feed-attach .t{font-weight:800;font-size:14.5px}
+.feed-attach .g{font-size:12px;color:var(--ink-3);font-weight:600;margin-top:2px}
+.feed-attach .pitch{font-size:13px;color:var(--ink);margin-top:7px;line-height:1.5}
+.feed-card .foot{display:flex;gap:18px;margin-top:13px;color:var(--ink-2);font-size:13px;font-weight:600}
+.feed-card .foot button:hover{color:var(--accent)}
+
+/* ---------- MYPAGE ---------- */
+.mp-profile{display:flex;gap:20px;align-items:center;background:#fff;border:1px solid var(--line);
+  border-radius:18px;padding:22px 24px;box-shadow:var(--shadow);margin-bottom:28px;flex-wrap:wrap}
+.mp-av{width:74px;height:74px;border-radius:50%;background:linear-gradient(135deg,#ff7eb3,#ff2e63);
+  display:grid;place-items:center;color:#fff;font-weight:900;font-size:28px;flex-shrink:0}
+.mp-profile .nm{font-size:21px;font-weight:900;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.mp-profile .titles{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}
+.mp-stats{display:flex;gap:26px;margin-left:auto;flex-wrap:wrap}
+.mp-stat{text-align:center}
+.mp-stat .n{font-size:23px;font-weight:900}
+.mp-stat .l{font-size:12px;color:var(--ink-3);font-weight:600;margin-top:1px}
+.badge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:13px}
+.badge-item{text-align:center;padding:16px 10px;border-radius:14px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
+.badge-item .ic{width:48px;height:48px;border-radius:50%;margin:0 auto 9px;display:grid;place-items:center;font-size:22px;color:#fff}
+.badge-item.locked{opacity:.5;filter:grayscale(.6)}
+.badge-item.locked .ic{background:var(--line-2)!important}
+.badge-item .bn{font-weight:800;font-size:13px}
+.badge-item .bd{font-size:11px;color:var(--ink-3);margin-top:3px;line-height:1.35}
+.report-card{background:linear-gradient(135deg,#1a1c2e,#2a2e52);color:#fff;border-radius:18px;padding:24px;box-shadow:var(--shadow-lg)}
+.report-card .rh{font-size:13px;font-weight:700;color:#a9b4ff}
+.report-card h3{font-size:22px;font-weight:900;margin:4px 0 18px}
+.report-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.12);font-size:14px}
+.report-row:last-child{border:none}
+.report-row .v{font-weight:800}
+.chronicle{position:relative;padding-left:24px}
+.chronicle::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:var(--line-2)}
+.chr-item{position:relative;padding:0 0 22px}
+.chr-item::before{content:"";position:absolute;left:-22px;top:4px;width:11px;height:11px;border-radius:50%;
+  background:var(--accent);border:2px solid #fff;box-shadow:0 0 0 2px var(--accent)}
+.chr-item .dt{font-size:12px;color:var(--ink-3);font-weight:700}
+.chr-item .tx{font-size:14.5px;font-weight:600;margin-top:3px}
+
+.empty{text-align:center;padding:50px 20px;color:var(--ink-3)}
+.empty .e{font-size:40px;margin-bottom:10px}
+.empty p{font-size:14px;font-weight:600}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:34px;transform:translateX(-50%) translateY(20px);z-index:200;
+  background:var(--ink);color:#fff;padding:13px 22px;border-radius:13px;font-size:14px;font-weight:700;
+  box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transition:.3s;display:flex;align-items:center;gap:9px}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ===== v2 보완: 시청상태 / 무드 / 발견신호 / 크리에이터 / Wrapped ===== */
+.status-seg{display:flex;gap:6px;flex-wrap:wrap}
+.status-seg button{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:700;
+  padding:9px 13px;border-radius:11px;background:var(--bg-soft);color:var(--ink-2);border:1.5px solid transparent;transition:.15s}
+.status-seg button:hover{background:var(--bg-soft2)}
+.status-seg button.on{color:#fff}
+.status-seg button.on.s-watch{background:#0a66ff}
+.status-seg button.on.s-hold{background:#d97706}
+.status-seg button.on.s-drop{background:#6b7280}
+.status-seg button.on.s-done{background:#10b981}
+.notify-row{display:flex;align-items:center;gap:9px;margin-top:12px;background:#eef4ff;border-radius:12px;
+  padding:11px 14px;font-size:13.5px;font-weight:700;color:var(--blue)}
+.notify-row .sw{margin-left:auto;width:42px;height:24px;border-radius:999px;background:var(--line-2);
+  position:relative;transition:.2s;cursor:pointer;flex-shrink:0}
+.notify-row .sw::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}
+.notify-row .sw.on{background:var(--blue)}
+.notify-row .sw.on::after{left:20px}
+.signal{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;padding:8px 13px;border-radius:11px;margin-top:8px}
+.signal.good{background:#e7f9f0;color:#0a8a52}
+.signal.warn{background:#fff4e0;color:#c2790a}
+.signal.cult{background:#f3eaff;color:#7c3aed}
+.poster .statustag{position:absolute;bottom:0;left:0;right:0;z-index:3;font-size:10.5px;font-weight:800;padding:5px 10px;color:#fff;text-align:center}
+.mood-row{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.mood-row::-webkit-scrollbar{display:none}
+.mood{flex:0 0 auto;width:150px;height:96px;border-radius:16px;padding:14px;color:#fff;cursor:pointer;
+  display:flex;flex-direction:column;justify-content:space-between;transition:.2s;box-shadow:var(--shadow)}
+.mood:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.mood .e{font-size:24px}
+.mood .l{font-weight:800;font-size:14px;letter-spacing:-.3px;line-height:1.2}
+.continue-row{display:flex;gap:14px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.continue-row::-webkit-scrollbar{display:none}
+.cont-card{flex:0 0 auto;width:290px;display:flex;gap:12px;background:#fff;border:1px solid var(--line);
+  border-radius:14px;padding:13px;box-shadow:var(--shadow);cursor:pointer;transition:.18s}
+.cont-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.cont-card .pp{width:54px;height:74px;border-radius:8px;flex-shrink:0;color:#fff;font-weight:800;font-size:10px;display:flex;align-items:flex-end;padding:5px}
+.cont-card .t{font-weight:800;font-size:14px}
+.cont-card .nx{font-size:12.5px;color:var(--blue);font-weight:700;margin-top:4px}
+.cont-bar{height:6px;background:var(--bg-soft);border-radius:999px;margin-top:7px;overflow:hidden}
+.cont-bar i{display:block;height:100%;background:var(--blue);border-radius:999px}
+.cre-chip{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;
+  background:#eef4ff;color:var(--blue);cursor:pointer;margin-left:7px;transition:.15s;white-space:nowrap}
+.cre-chip:hover{background:#dbe8ff}
+.cre-chip.on{background:var(--blue);color:#fff}
+.cre-card{flex:0 0 auto;width:185px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow);text-align:center}
+.cre-card .ic{width:50px;height:50px;border-radius:14px;margin:0 auto 9px;display:grid;place-items:center;color:#fff;font-weight:900;font-size:18px}
+.cre-card .nm{font-weight:800;font-size:14px}
+.cre-card .role{font-size:12px;color:var(--ink-3);font-weight:600;margin-top:2px}
+.cre-card .new{font-size:11.5px;color:var(--accent);font-weight:800;margin-top:6px}
+.cre-card button{margin-top:11px;width:100%;font-size:12.5px;font-weight:700;padding:8px;border-radius:9px;border:1.5px solid var(--line-2);background:#fff;color:var(--ink)}
+.cre-card button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.sfilter{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+.sfilter button{font-size:13px;font-weight:700;padding:7px 13px;border-radius:999px;background:var(--bg-soft);color:var(--ink-2)}
+.sfilter button.on{background:var(--ink);color:#fff}
+.wrap-card{position:relative;border-radius:22px;overflow:hidden;color:#fff;padding:28px 26px;
+  background:radial-gradient(130% 130% at 80% 0%,#7c3aed 0%,#0a66ff 50%,#021b4a 100%)}
+.wrap-card::before{content:"";position:absolute;left:-40px;bottom:-50px;width:240px;height:240px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,198,255,.45),transparent 65%)}
+.wrap-card .wh{font-size:12px;font-weight:800;letter-spacing:1.5px;color:#bcd6ff;position:relative}
+.wrap-card h2{font-size:25px;font-weight:900;margin:5px 0 18px;letter-spacing:-.6px;position:relative;line-height:1.2}
+.wrap-top3{display:flex;gap:10px;position:relative;margin-bottom:18px}
+.wrap-top3 .wt{flex:1;text-align:center;min-width:0}
+.wrap-top3 .pp{aspect-ratio:3/4;border-radius:10px;display:flex;align-items:flex-end;padding:7px;font-weight:800;font-size:11px;
+  color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.4);box-shadow:0 6px 18px rgba(0,0,0,.3)}
+.wrap-top3 .rk{font-size:11px;font-weight:800;margin-top:6px;color:#cfe1ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wrap-stats{display:flex;gap:18px;position:relative;flex-wrap:wrap}
+.wrap-stats .ws .n{font-size:20px;font-weight:900}
+.wrap-stats .ws .l{font-size:11px;color:#cfe1ff;font-weight:600}
+.wrap-foot{position:relative;margin-top:18px;font-size:12px;color:#9fd1ff;font-weight:700}
+.t3-pick{display:flex;gap:9px;flex-wrap:wrap}
+.t3-pick .opt{cursor:pointer;border-radius:10px;overflow:hidden;width:84px;border:2.5px solid transparent;transition:.15s;position:relative}
+.t3-pick .opt .img{aspect-ratio:3/4;display:flex;align-items:flex-end;padding:6px;color:#fff;font-size:10px;font-weight:800}
+.t3-pick .opt.sel{border-color:var(--accent)}
+.t3-pick .opt .ord{position:absolute;top:5px;right:5px;width:20px;height:20px;border-radius:50%;background:var(--accent);
+  display:none;place-items:center;font-size:11px;font-weight:900;color:#fff}
+.t3-pick .opt.sel .ord{display:grid}
+
+/* ===== 취향분석 온보딩 ===== */
+.onb-progress{height:5px;background:var(--bg-soft);border-radius:999px;margin:0 auto 24px;max-width:540px;overflow:hidden}
+.onb-progress i{display:block;height:100%;background:var(--accent);border-radius:999px;transition:.4s}
+.onb-wrap{max-width:540px;margin:0 auto}
+.onb-card{background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow-lg);padding:34px 28px;animation:fade .3s}
+.onb-mascot{width:108px;height:108px;border-radius:32px;margin:0 auto 22px;display:flex;align-items:center;justify-content:center;gap:13px;
+  background:radial-gradient(circle at 42% 34%,#5fe0ff,#0a66ff 58%,#021b4a);box-shadow:0 14px 44px rgba(10,102,255,.45);position:relative}
+.onb-mascot::after{content:"";position:absolute;inset:-6px;border-radius:38px;border:3px solid rgba(0,198,255,.35);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.06);opacity:0}}
+.onb-mascot .eye{width:17px;height:26px;background:#04183f;border-radius:50%;box-shadow:0 0 14px #6ff0ff;animation:blinkeye 3.4s infinite}
+@keyframes blinkeye{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+.onb-title{font-size:23px;font-weight:900;text-align:center;letter-spacing:-.5px;line-height:1.3}
+.onb-sub{font-size:14px;color:var(--ink-2);text-align:center;margin-top:11px;line-height:1.6;font-weight:500}
+.onb-q{font-size:21px;font-weight:900;letter-spacing:-.5px;line-height:1.35}
+.onb-qsub{font-size:13px;color:var(--ink-3);font-weight:600;margin:7px 0 20px}
+.onb-opts{display:flex;flex-direction:column;gap:10px}
+.onb-opt{display:flex;align-items:center;gap:12px;padding:15px 16px;border:1.5px solid var(--line);border-radius:14px;cursor:pointer;
+  font-weight:700;font-size:14.5px;transition:.15s;background:#fff;text-align:left;width:100%;color:var(--ink)}
+.onb-opt:hover{border-color:var(--ink-3)}
+.onb-opt.sel{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-deep)}
+.onb-opt .e{font-size:20px;flex-shrink:0}
+.onb-opt .ck{margin-left:auto;width:22px;height:22px;border-radius:50%;border:2px solid var(--line-2);display:grid;place-items:center;font-size:11px;color:#fff;flex-shrink:0}
+.onb-opt.sel .ck{background:var(--accent);border-color:var(--accent)}
+.onb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px}
+.onb-tile{border:1.5px solid var(--line);border-radius:14px;padding:15px 8px;text-align:center;cursor:pointer;transition:.15s;background:#fff;font-weight:700;font-size:13px;color:var(--ink)}
+.onb-tile:hover{border-color:var(--ink-3)}
+.onb-tile.sel{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-deep)}
+.onb-tile .e{font-size:25px;display:block;margin-bottom:7px}
+.onb-nick{display:flex;align-items:center;gap:10px;background:var(--bg-soft);border-radius:14px;padding:6px 6px 6px 18px;margin:6px 0 2px}
+.onb-nick input{flex:1;border:none;background:transparent;font-size:17px;font-weight:800;color:var(--ink);min-width:0}
+.onb-nick input:focus{outline:none}
+.onb-nick .reroll{width:44px;height:44px;border-radius:11px;background:#fff;display:grid;place-items:center;font-size:18px;box-shadow:var(--shadow);flex-shrink:0}
+.onb-nick .reroll:hover{background:var(--bg-soft2)}
+.onb-nav{display:flex;gap:10px;margin-top:26px}
+.onb-nav .btn{flex:1}
+.onb-nav .onb-back{flex:0 0 auto;width:54px}
+.onb-spin{width:52px;height:52px;border:5px solid var(--bg-soft2);border-top-color:var(--accent);border-radius:50%;margin:26px auto 6px;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.onb-result-cards{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+.onb-rc{display:flex;gap:14px;padding:14px;border:1.5px solid var(--line);border-radius:16px;cursor:pointer;transition:.18s;background:#fff;align-items:center}
+.onb-rc:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow)}
+.onb-rc .pp{width:62px;height:84px;border-radius:10px;flex-shrink:0;color:#fff;font-weight:800;font-size:10px;display:flex;align-items:flex-end;padding:6px}
+.onb-rc .t{font-weight:800;font-size:16px}
+.onb-rc .g{font-size:12px;color:var(--ink-3);font-weight:600;margin-top:3px}
+.onb-rc .why{font-size:12.5px;color:var(--accent);font-weight:700;margin-top:6px}
+.onb-rc .go{margin-left:auto;color:var(--ink-3);font-size:24px;font-weight:300;flex-shrink:0}
+
+/* ===== 작품 등록 / 소장관 / 프로필 수정 / 단행본 ===== */
+.reg-tabs{display:flex;gap:6px;margin-bottom:16px;background:var(--bg-soft);padding:5px;border-radius:12px}
+.reg-tabs button{flex:1;font-size:13.5px;font-weight:700;padding:9px;border-radius:9px;color:var(--ink-2)}
+.reg-tabs button.on{background:#fff;color:var(--ink);box-shadow:var(--shadow)}
+.reg-row{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}
+.reg-row .pp{width:42px;height:58px;border-radius:7px;flex-shrink:0}
+.reg-row .t{font-weight:800;font-size:14px}
+.reg-row .g{font-size:12px;color:var(--ink-3);font-weight:600;margin-top:2px}
+.reg-status{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.reg-status button{font-size:11px;font-weight:700;padding:5px 9px;border-radius:8px;background:var(--bg-soft);color:var(--ink-2)}
+.reg-status button.on{color:#fff}
+.reg-status button.on.s-watch{background:#0a66ff}.reg-status button.on.s-hold{background:#d97706}
+.reg-status button.on.s-drop{background:#6b7280}.reg-status button.on.s-done{background:#10b981}
+.reg-done{font-size:11px;font-weight:800;color:#10b981;flex-shrink:0;align-self:flex-start;margin-top:4px}
+#regResults{max-height:340px;overflow-y:auto}
+.reg-custom{display:flex;gap:14px;margin-bottom:6px}
+.reg-photo{width:96px;height:130px;border-radius:12px;flex-shrink:0;overflow:hidden;cursor:pointer;
+  border:1.5px dashed var(--line-2);display:grid;place-items:center;background:var(--bg-soft)}
+.reg-photo img{width:100%;height:100%;object-fit:cover}
+.reg-photo .ph{text-align:center;color:var(--ink-3);font-size:12px;font-weight:700}
+.reg-inp{width:100%;border:1.5px solid var(--line-2);border-radius:11px;padding:11px 13px;font-size:14px;margin-bottom:9px;color:var(--ink);background:#fff}
+.reg-inp:focus{outline:none;border-color:var(--blue)}
+select.reg-inp{appearance:none;cursor:pointer}
+.pe-lab{display:block;font-size:12.5px;font-weight:700;color:var(--ink-3);margin:4px 0 6px}
+.edit-prof{font-size:12.5px;font-weight:700;color:var(--ink-2);background:var(--bg-soft);padding:8px 14px;border-radius:999px;margin-top:11px}
+.edit-prof:hover{background:var(--bg-soft2)}
+.buy-card{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+.buy-ic{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#0a66ff,#00c6ff);display:grid;place-items:center;font-size:22px;flex-shrink:0}
+.buy-t{font-weight:800;font-size:14.5px}
+.buy-p{font-size:13px;color:var(--accent);font-weight:800;margin-top:2px}
+.buy-btn{flex-shrink:0;text-decoration:none;padding:11px 16px}
+@media(max-width:560px){.buy-card{flex-wrap:wrap}.buy-btn{width:100%}}
+.owned-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.own-card{display:flex;gap:13px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px;box-shadow:var(--shadow);position:relative}
+.own-cover{width:52px;height:72px;border-radius:8px;flex-shrink:0;display:flex;align-items:flex-end;padding:5px;color:#fff;font-weight:800;font-size:10px;background-color:var(--bg-soft2);background-size:cover;background-position:center}
+.own-info{flex:1;min-width:0}
+.own-t{font-weight:800;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:18px}
+.own-g{font-size:12px;color:var(--ink-3);font-weight:600;margin-top:2px}
+.own-card .reg-status{margin-top:9px}
+.own-x{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:var(--bg-soft);color:var(--ink-3);font-size:12px;display:grid;place-items:center}
+.own-x:hover{background:#ffe2e2;color:var(--accent)}
+
+/* ===== 계정 / 인증 ===== */
+.acct{position:relative}
+.acct-menu{position:absolute;right:0;top:44px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);padding:8px;min-width:190px;display:none;z-index:90}
+.acct-menu.open{display:block}
+.acct-menu .am-name{padding:9px 12px;font-weight:800;font-size:13.5px;border-bottom:1px solid var(--line);margin-bottom:6px}
+.acct-menu .am-name small{display:block;font-weight:600;color:var(--ink-3);font-size:11px;margin-top:3px;word-break:break-all}
+.acct-menu button{display:block;width:100%;text-align:left;padding:10px 12px;border-radius:9px;font-size:13.5px;font-weight:700;color:var(--ink)}
+.acct-menu button:hover{background:var(--bg-soft)}
+.acct-menu button.danger{color:var(--accent)}
+.auth-screen{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;padding:20px;
+  background:radial-gradient(120% 130% at 20% 10%,#0a66ff 0%,#063e9e 45%,#021b4a 100%)}
+.auth-screen.open{display:flex}
+.auth-card{background:#fff;border-radius:24px;box-shadow:0 30px 80px rgba(0,0,0,.4);width:100%;max-width:400px;padding:34px 30px;animation:pop .3s cubic-bezier(.2,.8,.3,1.2)}
+.auth-logo{display:flex;align-items:center;justify-content:center;gap:10px}
+.auth-logo .mark{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#0a66ff,#00c6ff);display:grid;place-items:center;color:#fff;font-size:19px}
+.auth-logo .word{font-weight:900;font-size:25px;letter-spacing:-.5px;background:linear-gradient(135deg,#0a66ff,#00c6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.auth-tagline{text-align:center;color:var(--ink-2);font-size:13.5px;font-weight:600;margin:11px 0 22px}
+.auth-tabs{display:flex;gap:6px;background:var(--bg-soft);padding:5px;border-radius:12px;margin-bottom:18px}
+.auth-tabs button{flex:1;font-size:14px;font-weight:700;padding:10px;border-radius:9px;color:var(--ink-2)}
+.auth-tabs button.on{background:#fff;color:var(--ink);box-shadow:var(--shadow)}
+.auth-inp{width:100%;border:1.5px solid var(--line-2);border-radius:12px;padding:13px 15px;font-size:14px;margin-bottom:11px;color:var(--ink);background:#fff}
+.auth-inp:focus{outline:none;border-color:var(--blue)}
+.auth-btn{width:100%;background:var(--blue);color:#fff;font-weight:800;font-size:15px;padding:14px;border-radius:12px;margin-top:4px}
+.auth-btn:hover{filter:brightness(.94)}
+.auth-guest{display:block;width:100%;text-align:center;margin-top:16px;color:var(--ink-3);font-weight:700;font-size:13px}
+.auth-guest:hover{color:var(--ink-2)}
+.auth-hint{font-size:12px;color:var(--ink-3);font-weight:600;text-align:center;margin-top:13px;line-height:1.5}
+
+/* ===== v3: 월간 리포트 / 뱃지 티어 / 제작사 / 시리즈 트리 ===== */
+.mr-wrap{display:grid;grid-template-columns:230px 1fr;gap:18px;align-items:start}
+@media(max-width:760px){.mr-wrap{grid-template-columns:1fr}}
+.mr-profile{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow);text-align:center}
+.mr-profile .av{width:64px;height:64px;border-radius:50%;margin:0 auto 10px;background:linear-gradient(135deg,#ff7eb3,#ff2e63);display:grid;place-items:center;color:#fff;font-weight:900;font-size:26px}
+.mr-profile .nm{font-weight:900;font-size:18px}
+.mr-profile .id{font-size:12px;color:var(--ink-3);font-weight:600;margin-top:2px}
+.mr-ring{width:150px;height:150px;border-radius:50%;margin:18px auto 4px;display:grid;place-items:center;
+  background:conic-gradient(var(--blue) calc(var(--p,75)*1%), var(--bg-soft) 0);position:relative}
+.mr-ring::before{content:"";position:absolute;inset:11px;border-radius:50%;background:#fff}
+.mr-ring .in{position:relative;text-align:center}
+.mr-ring .y{font-size:12px;color:var(--ink-3);font-weight:700}
+.mr-ring .n{font-size:30px;font-weight:900;letter-spacing:-1px;line-height:1}
+.mr-ring .u{font-size:12px;color:var(--ink-2);font-weight:700}
+.mr-main{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.mr-stats{display:grid;grid-template-columns:repeat(4,1fr)}
+.mr-stat{padding:18px 10px;text-align:center;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.mr-stat:nth-child(4){border-right:none}
+.mr-stat .l{font-size:12px;color:var(--ink-3);font-weight:700}
+.mr-stat .v{font-size:21px;font-weight:900;margin-top:4px;letter-spacing:-.4px}
+.mr-cal{padding:18px 20px}
+.mr-cal .top{text-align:center;font-weight:800;font-size:16px;margin-bottom:14px}
+.mr-nav{width:28px;height:28px;border-radius:9px;background:var(--bg-soft);font-size:15px;color:var(--ink-2);vertical-align:middle}
+.mr-nav:hover{background:var(--bg-soft2);color:var(--ink)}
+.cal-cell.has:hover{transform:translateY(-2px)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal-h{text-align:center;font-size:12px;font-weight:700;color:var(--ink-3);padding-bottom:2px}
+.cal-h.sun{color:#ef4444}
+.cal-cell{aspect-ratio:3/4;border-radius:8px;position:relative;display:flex;align-items:flex-start;padding:5px;font-size:11.5px;font-weight:700;color:var(--ink-3)}
+.cal-cell.empty{background:transparent}
+.cal-cell.has{color:#fff;box-shadow:var(--shadow)}
+.cal-cell.has .dn{position:relative;z-index:2;text-shadow:0 1px 3px rgba(0,0,0,.55)}
+.cal-cell .cnt{position:absolute;top:-5px;right:-5px;background:var(--blue);color:#fff;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;z-index:3;border:2px solid #fff}
+.mr-bars{display:flex;align-items:flex-end;gap:7px;padding:16px 20px 20px;border-top:1px solid var(--line);height:172px}
+.mr-bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px}
+.mr-bar .b{width:100%;max-width:30px;background:#cdd9ff;border-radius:6px 6px 0 0;transition:.5s}
+.mr-bar.cur .b{background:linear-gradient(180deg,#00c6ff,#0a66ff)}
+.mr-bar .v{font-size:10px;font-weight:800;color:var(--ink-2)}
+.mr-bar .m{font-size:10px;font-weight:700;color:var(--ink-3)}
+.mr-bar.cur .m{color:var(--blue)}
+
+.badge-item{position:relative}
+.badge-tier-h{display:flex;align-items:center;gap:9px;font-size:14.5px;font-weight:800;margin:4px 0 13px}
+.badge-tier-h .tg{font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:999px}
+.badge-item .prog{height:5px;background:var(--bg-soft);border-radius:999px;margin-top:9px;overflow:hidden}
+.badge-item .prog i{display:block;height:100%;border-radius:999px;background:var(--blue)}
+.badge-item .pv{font-size:10.5px;font-weight:700;color:var(--ink-3);margin-top:5px}
+.badge-item.gold{background:linear-gradient(160deg,#fffbeb,#fff);border-color:#f0d99a}
+.badge-item.gold .ic{box-shadow:0 6px 18px rgba(212,160,23,.35)}
+.badge-item.gold.got{border-color:#e8b923;box-shadow:0 8px 22px rgba(212,160,23,.28)}
+.badge-item.gold .prog i{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
+.badge-item .goldtag{position:absolute;top:7px;right:9px;font-size:8.5px;font-weight:900;color:#b8860b;letter-spacing:.5px}
+.badge-item .gotmark{position:absolute;top:7px;left:9px;font-size:13px}
+
+/* 제작사 페이지 */
+.studio-hero{display:flex;gap:22px;align-items:center;margin-bottom:24px;flex-wrap:wrap}
+.studio-logo{width:92px;height:92px;border-radius:24px;display:grid;place-items:center;font-size:44px;color:#fff;flex-shrink:0;box-shadow:var(--shadow-lg)}
+.studio-hd{flex:1;min-width:240px}
+.studio-hd h1{font-size:27px;font-weight:900;letter-spacing:-.6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.studio-hd .en{font-size:13.5px;color:var(--ink-3);font-weight:700;margin-top:3px}
+.studio-hd .meta{font-size:13px;color:var(--ink-2);font-weight:600;margin-top:8px}
+.studio-hd .tagline{font-size:14.5px;font-weight:700;margin-top:9px;color:var(--blue)}
+.studio-status{font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px;background:#e7f9f0;color:#0a8a52}
+.studio-links{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.studio-links a,.studio-links button{font-size:12.5px;font-weight:700;color:var(--ink);background:var(--bg-soft);padding:8px 13px;border-radius:10px;text-decoration:none}
+.studio-links a:hover,.studio-links button:hover{background:var(--bg-soft2)}
+.studio-links .foll.on{background:var(--ink);color:#fff}
+.studio-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px;margin-bottom:8px}
+.ss-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px;text-align:center;box-shadow:var(--shadow)}
+.ss-card .n{font-size:21px;font-weight:900}
+.ss-card .l{font-size:11.5px;color:var(--ink-3);font-weight:600;margin-top:2px}
+.gdist{display:flex;flex-direction:column;gap:9px;margin-top:4px}
+.gdist .row{display:flex;align-items:center;gap:10px}
+.gdist .gl{width:74px;font-size:12.5px;font-weight:700;flex-shrink:0;text-align:right;color:var(--ink-2)}
+.gdist .gt{flex:1;height:13px;background:var(--bg-soft);border-radius:999px;overflow:hidden}
+.gdist .gt i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#0a66ff,#00c6ff)}
+.gdist .gn{font-size:12px;font-weight:800;color:var(--ink-2);width:26px}
+.sfilter2{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.sfilter2 select{font-size:12.5px;font-weight:700;border:1.5px solid var(--line-2);border-radius:9px;padding:8px 11px;background:#fff;color:var(--ink);cursor:pointer}
+.crew-wrap{display:flex;gap:8px;flex-wrap:wrap}
+.crew-chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;padding:8px 13px;border-radius:10px;background:var(--bg-soft);cursor:pointer}
+.crew-chip:hover{background:var(--bg-soft2)}
+.crew-chip.static{cursor:default}
+.stl-item{display:flex;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)}
+.stl-item .yr{font-weight:900;color:var(--blue);width:54px;flex-shrink:0}
+.stl-item .wk{font-weight:700;font-size:14px;cursor:pointer}
+.stl-item .wk:hover{color:var(--accent)}
+.sim-row{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.sim-card{flex:0 0 auto;width:134px;text-align:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;box-shadow:var(--shadow);transition:.18s}
+.sim-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.sim-card .lg{width:44px;height:44px;border-radius:12px;margin:0 auto 8px;display:grid;place-items:center;font-size:20px;color:#fff}
+.sim-card .nm{font-weight:800;font-size:13px}
+.sim-card .rl{font-size:11px;color:var(--ink-3);font-weight:600;margin-top:2px}
+
+/* 시리즈 트리 */
+.series-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.series-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow)}
+.series-card .sh{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.series-card .sh .sd{width:11px;height:11px;border-radius:50%;flex-shrink:0}
+.series-card .sh .t{font-weight:800;font-size:15.5px}
+.series-card .sh .c{margin-left:auto;font-size:11.5px;font-weight:700;color:var(--ink-3)}
+.snode{display:flex;align-items:center;gap:11px;padding:9px 0;cursor:pointer}
+.snode .ck{width:24px;height:24px;border-radius:50%;border:2px solid var(--line-2);display:grid;place-items:center;font-size:11px;flex-shrink:0;transition:.15s;color:transparent}
+.snode.done .ck{background:#10b981;border-color:#10b981;color:#fff}
+.snode .nm{font-weight:700;font-size:13.5px}
+.snode .sub{font-size:11px;color:var(--ink-3);font-weight:600}
+.snode.next{background:#eef4ff;border-radius:10px;padding:9px 11px;margin:2px -11px}
+.snode.next .nm{color:var(--blue)}
+.snode .nexttag{margin-left:auto;font-size:10px;font-weight:800;color:#fff;background:var(--blue);padding:3px 9px;border-radius:999px;flex-shrink:0}
+.snode .open{margin-left:auto;color:var(--ink-3);font-size:16px;flex-shrink:0}
+.snode.done .nm{color:var(--ink-3)}
+
+@media(max-width:560px){
+  .hero h1{font-size:26px}
+  .detail-hero{grid-template-columns:110px 1fr}
+  .detail-poster{font-size:14px}
+  .detail-info h1{font-size:22px}
+  .scene-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="logo" onclick="go('home')">
+      <div class="mark">⚓</div>
+      <div class="word">0LLBLUE<small>발견의 바다</small></div>
+    </div>
+    <div class="search">
+      <span class="ic">🔍</span>
+      <input id="searchInput" placeholder="작품·작가·태그 검색 (예: 다크판타지)" oninput="onSearch(this.value)" />
+    </div>
+    <div class="spacer"></div>
+    <div class="acct" id="acctWrap">
+      <div class="avatar" id="topAv" onclick="toggleAcct()">소</div>
+      <div class="acct-menu" id="acctMenu">
+        <div class="am-name" id="amName"></div>
+        <div id="amActions"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tabs-inner" id="tabs"></div>
+</nav>
+
+<main class="app">
+  <div id="view" class="view"></div>
+</main>
+
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="auth-screen" id="authScreen">
+  <div class="auth-card">
+    <div class="auth-logo"><div class="mark">⚓</div><div class="word">0LLBLUE</div></div>
+    <div class="auth-tagline">웹툰·애니 발견의 바다에 오신 걸 환영해요</div>
+    <div class="auth-tabs">
+      <button id="atLogin" class="on" onclick="authTab('login')">로그인</button>
+      <button id="atSignup" onclick="authTab('signup')">회원가입</button>
+    </div>
+    <div id="authBody"></div>
+    <button class="auth-guest" onclick="guestMode()">먼저 둘러보기 (게스트 · 저장 안 됨)</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   올블루 0LLBLUE — 데이터 & 상태
+============================================================ */
+const PAL = {
+  '다크판타지':['#3b1f5e','#7c3aed'], '액션':['#b91c1c','#f97316'],
+  '로맨스':['#db2777','#fb7185'], '판타지':['#0e7490','#22d3ee'],
+  '무협':['#7c2d12','#d97706'], '일상':['#0f766e','#34d399'],
+  '스릴러':['#1e293b','#475569'], '성장물':['#1d4ed8','#60a5fa'],
+  '코미디':['#ca8a04','#fde047'], '드라마':['#831843','#ec4899'],
+  '회귀':['#0c4a6e','#0ea5e9'], '먼치킨':['#5b21b6','#a855f7'],
+};
+function grad(genre){const c=PAL[genre]||['#334155','#64748b'];return `linear-gradient(150deg,${c[0]},${c[1]})`}
+
+const WORKS = [
+  {id:1,t:'귀멸의 칼날',type:'애니 · 만화',status:'완결',genres:['다크판타지','시대극'],
+   tags:['남매서사','작화미친','성장물','입문추천','선행불필요'],rating:4.9,count:18402,age:'15세',
+   plat:[['라프텔','애니','#7b2ff7'],['넷플릭스','애니','#e50914'],['네이버시리즈','만화','#03c75a']],
+   syn:'가족을 혈귀에게 잃고 여동생마저 혈귀가 된 소년이, 동생을 사람으로 되돌리기 위해 귀살대에 들어가는 시대극 다크판타지. 압도적인 작화로 유명한 입문 추천작.',
+   info:{원작:'고토게 코요하루',제작사:'ufotable',감독:'소토자키 하루오',화수:'63화 + 극장판',완주:'약 26시간',방영:'2019~ · 시즌 4'},
+   related:[2,3,12], 
+   timeline:[['탄지로 입지편','시즌 1 · 26화'],['무한열차편','극장판 · TV판'],['유곽편','시즌 2'],['도공 마을편','시즌 3'],['합동 강화 훈련편','시즌 4'],['무한성편','극장판 3부작 · 최종장']],
+   reviews:[
+     {n:'탄지로형',av:'#ff2e63',badge:['다크판타지 마스터','#7c3aed'],r:5,reco:'주술회전',b:'작화는 진짜 ufotable이 미쳤다. 무한열차편 극장에서 보고 울었음. 입문용으로도 최고.',help:421,cmt:23},
+     {n:'심야애니러',av:'#0a66ff',badge:['큐레이터','#ffaf1a'],r:4,reco:'진격의 거인',b:'스토리는 정석적인데 연출이 다 캐리한다. 음악도 좋고 호흡 액션 연출이 일품.',help:188,cmt:9},
+   ]},
+  {id:2,t:'주술회전',type:'애니',status:'연재중',genres:['다크판타지','액션'],tags:['배틀','작화미친','다크','성장물'],rating:4.7,count:14203,age:'15세',
+   plat:[['라프텔','애니','#7b2ff7'],['넷플릭스','애니','#e50914']],
+   syn:'저주가 실존하는 세계에서 특급 주물을 삼킨 소년이 주술고전을 다니며 저주와 싸우는 현대 다크판타지 배틀물.',
+   info:{제작사:'MAPPA',화수:'시즌 2 진행중',완주:'약 19시간',방영:'2020~'},related:[1,3,9],reviews:[]},
+  {id:3,t:'진격의 거인',type:'애니',status:'완결',genres:['다크판타지','스릴러'],tags:['반전미친','떡밥','명작','중독성'],rating:4.8,count:21500,age:'19세',
+   plat:[['넷플릭스','애니','#e50914'],['라프텔','애니','#7b2ff7']],
+   syn:'거대한 벽 안에 갇힌 인류와, 벽 너머에서 인간을 잡아먹는 거인의 사투를 그린 대서사 스릴러.',
+   info:{제작사:'WIT/MAPPA',화수:'89화',완주:'약 36시간',방영:'2013~2023'},related:[1,2,9],reviews:[]},
+  {id:4,t:'화산귀환',type:'웹툰',status:'연재중',genres:['무협','회귀'],tags:['먼치킨','사이다','입담','과거회귀'],rating:4.8,count:9800,age:'12세',
+   plat:[['네이버웹툰','웹툰','#00dc64']],
+   syn:'화산파의 13대 제자가 100년 후 쇠락한 화산파로 돌아와 다시 정점에 오르는 회귀 무협. 통쾌한 입담과 사이다 전개가 일품.',
+   info:{원작:'비가',작화:'LICO',화수:'연재중',방영:'-'},related:[5,6,11],reviews:[]},
+  {id:5,t:'상수리나무 아래',type:'웹툰',status:'완결',genres:['로맨스','드라마'],tags:['로판','명작','감정선','작화미친'],rating:4.9,count:13420,age:'15세',
+   plat:[['리디','웹툰','#3b82f6']],
+   syn:'전쟁 영웅과 정략 결혼한 여인이 서서히 진심을 마주해가는 로맨스 판타지. 섬세한 감정선으로 호평받은 명작.',
+   info:{원작:'서말',화수:'완결',방영:'-'},related:[6,4,12],reviews:[]},
+  {id:6,t:'광마회귀',type:'웹툰',status:'연재중',genres:['무협','회귀'],tags:['광기','먼치킨','입담','중독성'],rating:4.7,count:7600,age:'15세',
+   plat:[['카카오웹툰','웹툰','#ffcd00']],
+   syn:'미친 무공의 광마가 과거로 회귀해 다시 강호를 누비는 광기 가득한 회귀 무협.',
+   info:{원작:'유진성',화수:'연재중',방영:'-'},related:[4,11,1],reviews:[]},
+  {id:7,t:'스파이 패밀리',type:'애니',status:'연재중',genres:['코미디','액션'],tags:['힐링','가족','웃김','입문추천'],rating:4.6,count:11200,age:'12세',
+   plat:[['넷플릭스','애니','#e50914'],['라프텔','애니','#7b2ff7']],
+   syn:'스파이·암살자·초능력 소녀가 서로의 정체를 숨긴 채 가짜 가족을 꾸리며 벌어지는 코미디 첩보극.',
+   info:{제작사:'WIT/CloverWorks',화수:'시즌 2',방영:'2022~'},related:[2,1,10],reviews:[]},
+  {id:8,t:'체인소 맨',type:'애니',status:'연재중',genres:['다크판타지','액션'],tags:['하드코어','연출','컬트','중독성'],rating:4.5,count:8900,age:'19세',
+   plat:[['아마존','애니','#ff9900']],
+   syn:'악마와 계약한 소년이 데빌 헌터가 되어 살아가는 하드코어 다크판타지.',
+   info:{제작사:'MAPPA',화수:'시즌 1',방영:'2022~'},related:[2,3,1],reviews:[]},
+  {id:9,t:'나 혼자만 레벨업',type:'웹툰',status:'완결',genres:['판타지','먼치킨'],tags:['헌터','성장','사이다','글로벌인기'],rating:4.7,count:16800,age:'15세',
+   plat:[['카카오웹툰','웹툰','#ffcd00'],['넷플릭스','애니','#e50914']],
+   syn:'최약체 헌터가 비밀 시스템을 얻어 세계 최강으로 성장하는 글로벌 흥행 판타지.',
+   info:{원작:'추공',화수:'완결',방영:'애니화 2024'},related:[4,6,2],reviews:[]},
+  {id:10,t:'후르츠 바스켓',type:'애니',status:'완결',genres:['로맨스','일상'],tags:['힐링','감동','성장','명작'],rating:4.6,count:6400,age:'12세',
+   plat:[['라프텔','애니','#7b2ff7']],
+   syn:'십이지신의 저주를 가진 가문과 한 소녀가 서로의 상처를 보듬어가는 따뜻한 성장 드라마.',
+   info:{제작사:'TMS',화수:'63화',방영:'2019~2021'},related:[5,7,1],reviews:[]},
+  {id:11,t:'전지적 독자 시점',type:'웹툰',status:'연재중',genres:['판타지','먼치킨'],tags:['메타','떡밥','명작','중독성'],rating:4.8,count:12100,age:'15세',
+   plat:[['네이버웹툰','웹툰','#00dc64']],
+   syn:'자신만이 결말을 아는 소설이 현실이 된 세계에서 평범한 독자가 살아남는 메타 판타지.',
+   info:{원작:'싱숑',화수:'연재중',방영:'-'},related:[9,4,6],reviews:[]},
+  {id:12,t:'그 끝에 빛이',type:'웹툰',status:'완결',genres:['로맨스','드라마'],tags:['로판','감정선','잔잔','숨은명작'],rating:4.4,count:2100,age:'15세',
+   plat:[['리디','웹툰','#3b82f6']],
+   syn:'마법이 사라진 왕국에서 마지막 마법사와 기사가 나누는 잔잔한 로맨스 판타지. 알려지지 않은 숨은 명작.',
+   info:{원작:'(가상)',화수:'완결',방영:'-'},related:[5,10],reviews:[]},
+];
+const byId = id => WORKS.find(w=>w.id===id);
+
+/* v2: 완주 시간(h) · 완주율(%) — 발견 신호 & 무드 필터용 */
+const EXTRA={1:[26,94],2:[19,88],3:[36,91],4:[12,85],5:[8,96],6:[10,80],7:[14,90],8:[8,76],9:[15,89],10:[24,87],11:[20,92],12:[6,83]};
+WORKS.forEach(w=>{const e=EXTRA[w.id]||[12,85];w.hours=e[0];w.comp=e[1]});
+
+/* 단행본(종이책) 구매 정보 — 만화·웹툰 단행본 보유작 */
+const BOOKS={1:['9,000원~','예스24','https://www.yes24.com/product/search?query='],3:['5,500원~','알라딘','https://www.aladin.co.kr/search/wsearchresult.aspx?SearchWord='],4:['12,000원~','교보문고','https://search.kyobobook.co.kr/search?keyword='],5:['13,000원~','알라딘','https://www.aladin.co.kr/search/wsearchresult.aspx?SearchWord='],9:['11,000원~','예스24','https://www.yes24.com/product/search?query='],11:['12,000원~','교보문고','https://search.kyobobook.co.kr/search?keyword=']};
+WORKS.forEach(w=>{const b=BOOKS[w.id];if(b)w.book={price:b[0],store:b[1],url:b[2]}});
+
+/* 작품별 화수/회차(감상 화수 집계용) */
+const EP={1:63,2:47,3:89,4:120,5:80,6:60,7:37,8:24,9:179,10:63,11:150,12:70};
+WORKS.forEach(w=>w.ep=EP[w.id]||40);
+
+const STATE = {
+  saved:new Set(),         // 보고싶어요 한 작품
+  ratings:{},              // {workId:점수}
+  following:new Set(['민지','성욱']),
+  attendance:new Set(),    // 출석 day index
+  streak:0,
+  search:'',
+  status:{},               // {workId:'watch'|'hold'|'drop'|'done'} 시청 상태
+  progress:{},             // {workId: 마지막 본 시즌 index} 연재 추적
+  notify:new Set(),        // 다음 화·시즌 알림 받는 작품
+  followCreators:new Set(['ufotable']), // 작가·제작사 팔로우
+  top3:[1,3,5],            // 인생작 탑3 (workId)
+  moodFilter:null,         // 무드 발견 필터
+  mpFilter:'all',          // 마이페이지 도감 필터
+  profile:{name:'소연',bio:'웹툰·애니 발견을 즐기는 항해사'},
+  customWorks:[],          // 직접 등록한 소장 작품(플랫폼에 없는 것)
+  seriesProgress:new Set(),// 시리즈 트리에서 본 항목 키
+  myReviews:0,             // 내가 작성한 평가 수
+  viewLog:{},              // 'monthIndex-day' → [{wid,ep}] 실제 감상 기록
+  reportMonth:5,           // 월간 리포트 표시 월 (0=1월, 5=6월)
+  reportYear:2026,
+};
+const STATUS_META={
+  watch:{l:'정주행 중',e:'▶',c:'#0a66ff',cls:'s-watch'},
+  hold:{l:'보류',e:'⏸',c:'#d97706',cls:'s-hold'},
+  drop:{l:'하차',e:'✕',c:'#6b7280',cls:'s-drop'},
+  done:{l:'완료',e:'✓',c:'#10b981',cls:'s-done'},
+};
+
+/* 콘텐츠관 영업지수 (live) */
+let SALES = [{id:4,v:4500},{id:6,v:3200},{id:11,v:1800},{id:9,v:1500}];
+let TAGS_VOTE = [
+  {t:'#원작팬_후회하는_각색',v:541},{t:'#여주야_그냥_뭐어때',v:412},
+  {t:'#작화가_장르_그자체',v:189},{t:'#도망쳐_여기서',v:124},
+];
+const FEED = [
+  {n:'민지',av:'#a855f7',badge:['큐레이터','#ffaf1a'],act:'님이 ★5를 남겼어요',wid:5,pitch:'감정선 따라가다 보면 어느새 새벽. 로판 입문자에게 이거 하나는 꼭 쥐여주고 싶음.'},
+  {n:'성욱',av:'#0ea5e9',badge:['다크판타지 마스터','#7c3aed'],act:'님이 보고싶어요에 담았어요',wid:8,pitch:'연출만으로 멱살 잡고 끌고 간다. 호불호 갈리지만 한 번은 봐야 하는 컬트.'},
+  {n:'재범',av:'#f97316',badge:['발굴왕','#10b981'],act:'님이 숨은 명작을 발굴했어요',wid:12,pitch:'조회수는 낮은데 진짜 물건임. 잔잔한 로판 좋아하면 후회 안 함. 한 번만 봐주세요 제발요!'},
+];
+
+const ALL_GENRES=[...new Set(WORKS.flatMap(w=>w.genres))];
+/* 본 작품(상호작용한 작품) 집합 — 뱃지 진행도 계산용 */
+function seenIds(){const s=new Set([...STATE.saved]);Object.keys(STATE.status).forEach(id=>s.add(+id));Object.keys(STATE.ratings).forEach(id=>s.add(+id));(STATE.top3||[]).forEach(id=>s.add(id));return s}
+function genreSeen(g){let n=0;seenIds().forEach(id=>{const w=byId(id);if(w&&w.genres.includes(g))n++});return n}
+function tagSeen(t){let n=0;seenIds().forEach(id=>{const w=byId(id);if(w&&w.tags.includes(t))n++});return n}
+function genresCovered(){const s=new Set();seenIds().forEach(id=>{const w=byId(id);if(w)w.genres.forEach(g=>s.add(g))});return s.size}
+
+/* 뱃지: 일반(쉬움) + 황금(상위 1% 난이도). cond()는 현재 달성치, need는 목표치 */
+const BADGES=[
+  {tier:'easy',ic:'💗',c:'#ff2e63',n:'로맨스 사랑단',d:'로맨스 작품 3편 감상',cond:()=>genreSeen('로맨스'),need:3},
+  {tier:'easy',ic:'🌱',c:'#10b981',n:'첫 항해',d:'보고싶어요 첫 작품 담기',cond:()=>STATE.saved.size,need:1},
+  {tier:'easy',ic:'⭐',c:'#ffaf1a',n:'별점 입문',d:'작품 5개 평가하기',cond:()=>Object.keys(STATE.ratings).length,need:5},
+  {tier:'easy',ic:'📅',c:'#0a66ff',n:'개근 항해사',d:'3일 연속 출석',cond:()=>STATE.streak,need:3},
+  {tier:'easy',ic:'🔮',c:'#7c3aed',n:'취향 분석러',d:'취향분석 온보딩 완료',cond:()=>STATE.taste?1:0,need:1},
+  {tier:'easy',ic:'✍️',c:'#0ea5e9',n:'첫 영업글',d:'코멘트(평가글) 1개 작성',cond:()=>STATE.myReviews,need:1},
+  {tier:'gold',ic:'🥕',c:'#f59e0b',n:'큐레이터',d:'평가 1000개 · 추천 100회',cond:()=>Object.keys(STATE.ratings).length,need:1000},
+  {tier:'gold',ic:'⚔️',c:'#b91c1c',n:'액션에 미친 자',d:'액션 작품 100편 감상',cond:()=>genreSeen('액션'),need:100},
+  {tier:'gold',ic:'🗡️',c:'#7c2d12',n:'무림인',d:'무협 작품 100편 감상',cond:()=>genreSeen('무협'),need:100},
+  {tier:'gold',ic:'🧭',c:'#0a66ff',n:'발굴왕',d:'숨은 명작 10편 발굴',cond:()=>tagSeen('숨은명작'),need:10},
+  {tier:'gold',ic:'👑',c:'#0d9488',n:'장르 유목민',d:'전 장르 1편 이상 제패',cond:()=>genresCovered(),need:ALL_GENRES.length},
+  {tier:'gold',ic:'🏁',c:'#16a34a',n:'완주의 화신',d:'100편 완주(완료)',cond:()=>statusCountAll('done'),need:100},
+];
+function badgeState(b){const cur=b.cond()||0;return {cur,got:cur>=b.need,need:b.need,pct:Math.min(100,Math.round(cur/b.need*100))}}
+function repBadge(){
+  const earned=BADGES.filter(b=>badgeState(b).got);
+  const pick=earned.find(b=>b.tier==='gold')||earned[earned.length-1];
+  return pick?[pick.n,pick.c]:['신입 항해사','#94a3b8'];
+}
+
+const CREATORS=[
+  {n:'ufotable',role:'제작사',color:'#7c3aed',new:'무한성편 극장판 2부 제작'},
+  {n:'MAPPA',role:'제작사',color:'#e11551',new:'2026 신작 라인업 공개'},
+  {n:'WIT STUDIO',role:'제작사',color:'#0ea5e9',new:'오리지널 신작 발표'},
+  {n:'CloverWorks',role:'제작사',color:'#16a34a',new:'스파이 패밀리 새 시즌'},
+  {n:'비가',role:'작가',color:'#d97706',new:'화산귀환 2부 연재'},
+  {n:'추공',role:'작가',color:'#0a66ff',new:'차기작 연재 예고'},
+];
+
+/* ============================================================
+   v3: 제작사 페이지 데이터
+============================================================ */
+const STUDIOS={
+  'ufotable':{ko:'유포테이블',en:'ufotable, Inc.',logo:'⚜️',color:'#7c3aed',country:'일본 🇯🇵',founded:2000,status:'활동중',
+    tagline:'작화의 끝을 보여주는 디지털 작화 명가',
+    desc:'디지털 작화와 이펙트 연출에 강점을 지닌 일본 애니메이션 제작사. 액션·배틀 장면의 압도적인 비주얼로 정평이 나 있다.',
+    site:'https://www.ufotable.com',sns:'@ufotable_inc',works:[1],
+    directors:['소토자키 하루오'],cast:['하나에 나츠키','키토 아카리','시모노 히로','마츠오카 요시츠구'],
+    staff:['음악: 카지우라 유키 · 고 시이나','캐릭터 디자인: 마츠시마 아키라','촬영: ufotable'],
+    partners:['집영사(원작)','애니플렉스(제작)'],
+    upcoming:['귀멸의 칼날 무한성편 2부'],news:[['무한성편 극장판 3부작 제작 결정','#'],['해외 IMAX 동시 개봉 확정','#']],
+    similar:['MAPPA','WIT STUDIO']},
+  'MAPPA':{ko:'맙파',en:'MAPPA Co., Ltd.',logo:'🅼',color:'#e11551',country:'일본 🇯🇵',founded:2011,status:'활동중',
+    tagline:'하드코어 연출의 차세대 강자',
+    desc:'2011년 설립된 제작사로, 강렬한 연출과 어두운 분위기의 작품을 다수 제작했다. 최근 대형 IP의 후속 시즌을 잇따라 맡고 있다.',
+    site:'https://www.mappa.co.jp',sns:'@MAPPA_Info',works:[2,3,8],
+    directors:['박성후','야마모토 슈헤이'],cast:['에노키 준야','세토 아사미','토가시 미사키'],
+    staff:['음악: 우시오 켄스케','시리즈 구성: 세코 히로시'],
+    partners:['집영사','코단샤'],upcoming:['주술회전 사옥결전편'],news:[['신작 오리지널 애니 제작 발표','#']],
+    similar:['ufotable','WIT STUDIO']},
+  'WIT STUDIO':{ko:'위트 스튜디오',en:'WIT STUDIO',logo:'🅦',color:'#0ea5e9',country:'일본 🇯🇵',founded:2012,status:'활동중',
+    tagline:'역동적 연출의 드라마 메이커',
+    desc:'Production I.G에서 독립해 설립된 제작사. 진격의 거인 초기 시즌과 스파이 패밀리 등 화제작을 제작했다.',
+    site:'https://wit-studio.co.jp',sns:'@WITSTUDIO_NEWS',works:[3,7],
+    directors:['아라키 테츠로','후루하시 카즈히로'],cast:['카지 유키','이시카와 유이'],
+    staff:['음악: 사와노 히로유키'],partners:['코단샤','집영사'],upcoming:['오리지널 신작 (예정)'],
+    news:[['신규 오리지널 프로젝트 공개','#']],similar:['CloverWorks','MAPPA']},
+  'CloverWorks':{ko:'클로버웍스',en:'CloverWorks Inc.',logo:'🍀',color:'#16a34a',country:'일본 🇯🇵',founded:2018,status:'활동중',
+    tagline:'섬세한 일상과 감성의 스튜디오',
+    desc:'A-1 Pictures 고엔지 스튜디오가 분사해 설립. 감성적 연출과 안정적 작화로 다양한 장르를 소화한다.',
+    site:'https://www.cloverworks.co.jp',sns:'@cloverworks_pr',works:[7],
+    directors:['후루하시 카즈히로'],cast:['하야미 사오리','에구치 타쿠야'],
+    staff:['음악: (K)NoW_NAME'],partners:['집영사'],upcoming:['스파이 패밀리 시즌 3'],
+    news:[['스파이 패밀리 후속 제작 결정','#']],similar:['WIT STUDIO','ufotable']},
+  'TMS':{ko:'TMS 엔터테인먼트',en:'TMS Entertainment',logo:'🅣',color:'#d97706',country:'일본 🇯🇵',founded:1964,status:'활동중',
+    tagline:'반세기 역사의 종합 애니 명가',
+    desc:'1964년 설립된 일본의 노포 애니메이션 제작사. 장수 IP부터 감성 드라마까지 폭넓게 제작한다.',
+    site:'https://www.tms-e.co.jp',sns:'@tms_anime',works:[10],
+    directors:['이바타 요시히데'],cast:['이시카와 유이','우치다 유마'],staff:['음악: 사카키바라 마사루'],
+    partners:['하쿠센샤'],upcoming:[],news:[],similar:['CloverWorks']},
+};
+/* 작가(웹툰) — 가벼운 크리에이터 페이지 */
+const AUTHORS={
+  '비가':{ko:'비가',role:'작가',logo:'✒️',color:'#d97706',country:'대한민국 🇰🇷',tagline:'사이다 무협의 대명사',
+    desc:'통쾌한 전개와 입담으로 사랑받는 웹소설·웹툰 원작 작가.',works:[4]},
+  '추공':{ko:'추공',role:'작가',logo:'✒️',color:'#0a66ff',country:'대한민국 🇰🇷',tagline:'글로벌 흥행 판타지 메이커',
+    desc:'전 세계적으로 흥행한 헌터물 판타지의 원작 작가.',works:[9]},
+};
+function studioWorks(name){
+  const s=STUDIOS[name]||AUTHORS[name];
+  if(s&&s.works) return s.works.map(byId).filter(Boolean);
+  // 폴백: info 값에서 매칭
+  return WORKS.filter(w=>Object.values(w.info).some(v=>String(v).includes(name)));
+}
+function studioYear(w){const m=String(w.info.방영||'').match(/(\d{4})/);return m?+m[1]:(w.id*0+2020)}
+
+/* ============================================================
+   v3: 시리즈 트리 (작품관)
+============================================================ */
+const SERIES=[
+  {name:'귀멸의 칼날',color:'#7c3aed',wid:1,entries:[
+    {t:'1기 · 탄지로 입지편',sub:'TV · 2019',wid:1},
+    {t:'극장판 · 무한열차편',sub:'극장판 · 2020',wid:1},
+    {t:'2기 · 유곽편',sub:'TV · 2021',wid:1},
+    {t:'3기 · 도공 마을편',sub:'TV · 2023',wid:1},
+    {t:'4기 · 합동 강화 훈련편',sub:'TV · 2024',wid:1},
+    {t:'무한성편 극장판',sub:'극장판 · 2025~',wid:1},
+  ]},
+  {name:'진격의 거인',color:'#1e293b',wid:3,entries:[
+    {t:'시즌 1',sub:'2013',wid:3},{t:'시즌 2',sub:'2017',wid:3},
+    {t:'시즌 3',sub:'2018~19',wid:3},{t:'The Final Season',sub:'2020~23',wid:3},
+  ]},
+  {name:'화산귀환',color:'#d97706',wid:4,entries:[
+    {t:'1부 · 화산 귀환',sub:'웹툰',wid:4},{t:'2부 · 정파대전',sub:'웹툰 · 연재중',wid:4},
+  ]},
+];
+
+/* ============================================================
+   라우팅 & 탭
+============================================================ */
+const TABS=[['home','홈'],['taste','취향분석'],['works','작품관'],['follow','팔로우 전용관'],['hall','콘텐츠관'],['mypage','마이페이지']];
+let CURRENT='home';
+function renderTabs(){
+  document.getElementById('tabs').innerHTML = TABS.map(([k,l])=>
+    `<button class="tab ${k===CURRENT?'active':''}" onclick="go('${k}')">${l}${(k==='hall'||k==='taste')?'<span class="dot"></span>':''}</button>`).join('');
+}
+function go(view){
+  const prev=CURRENT;
+  CURRENT = (view==='detail')?CURRENT:view;
+  if(view!=='detail') renderTabs();
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(view==='taste') resetTaste();
+  ({home:renderHome,works:renderWorks,follow:renderFollow,hall:renderHall,mypage:renderMypage,taste:renderTaste})[view]();
+}
+
+/* ============================================================
+   공통 위젯
+============================================================ */
+function posterCard(w){
+  const saved = STATE.saved.has(w.id);
+  return `<div class="poster-card" onclick="openDetail(${w.id})">
+    <div class="poster ${saved?'saved':''}" style="background:${grad(w.genres[0])}">
+      <span class="badge">${w.status}</span>
+      <span class="savedmark">✓</span>
+      <span class="ptitle">${w.t}</span>
+      <span class="ptype">${w.type}</span>
+      ${STATE.status[w.id]?`<span class="statustag" style="background:${STATUS_META[STATE.status[w.id]].c}">${STATUS_META[STATE.status[w.id]].e} ${STATUS_META[STATE.status[w.id]].l}</span>`:''}
+    </div>
+    <div class="meta">
+      <div class="t">${w.t}</div>
+      <div class="r"><span class="star-mini">★</span> ${w.rating} · ${w.genres.join('·')}</div>
+    </div>
+  </div>`;
+}
+function toast(msg){
+  const t=document.getElementById('toast');t.innerHTML=msg;t.classList.add('show');
+  clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),1900);
+}
+function openModal(html){document.getElementById('modal').innerHTML=html;document.getElementById('modalBg').classList.add('open');document.body.style.overflow='hidden'}
+function closeModal(){document.getElementById('modalBg').classList.remove('open');document.body.style.overflow=''}
+
+/* v2: 완주율을 발견 신호로 전환 */
+function signalFor(w){
+  if(w.comp>=92) return {cls:'good',ic:'🏆',t:`완주율 ${w.comp}% · 끝까지 본 사람이 강력 추천`};
+  if(w.comp>=86) return {cls:'good',ic:'✅',t:`완주율 ${w.comp}% · 무난하게 끝까지 가요`};
+  if(w.comp>=80) return {cls:'cult',ic:'🎭',t:`완주율 ${w.comp}% · 호불호 갈리는 컬트, 취향 타요`};
+  return {cls:'warn',ic:'⚠️',t:`완주율 ${w.comp}% · 초반 고비 주의, 입문 편부터`};
+}
+/* v2: 무드·상황 기반 진입점 */
+const MOODS=[
+  {k:'weekend',e:'🛋️',l:'주말 완결각',g:['#0f766e','#10b981'],f:w=>w.status==='완결'&&w.hours<=15},
+  {k:'epic',e:'⛵',l:'대장정 정주행',g:['#0c4a6e','#0ea5e9'],f:w=>w.hours>=24},
+  {k:'intro',e:'🌱',l:'가볍게 입문각',g:['#1d4ed8','#60a5fa'],f:w=>w.tags.includes('입문추천')},
+  {k:'cry',e:'😭',l:'울고 싶을 때',g:['#831843','#ec4899'],f:w=>w.genres.some(g=>['로맨스','드라마'].includes(g))||w.tags.some(t=>['감동','감정선'].includes(t))},
+  {k:'finish',e:'🏆',l:'다들 끝까지 본 작품',g:['#7c2d12','#d97706'],f:w=>w.comp>=90},
+  {k:'art',e:'🎨',l:'작화가 미친 작품',g:['#3b1f5e','#7c3aed'],f:w=>w.tags.includes('작화미친')},
+];
+const moodById=k=>MOODS.find(m=>m.k===k);
+/* v2: 작가·제작사 팔로우 */
+const CRE_COLOR={'ufotable':'#7c3aed','MAPPA':'#e11551','WIT/MAPPA':'#e11551','WIT/CloverWorks':'#0ea5e9','비가':'#d97706','서말':'#ec4899','추공':'#0a66ff','싱숑':'#0ea5e9','유진성':'#7c2d12','TMS':'#16a34a','LICO':'#d97706','고토게 코요하루':'#16a34a','소토자키 하루오':'#0a66ff'};
+function creatorColor(n){return CRE_COLOR[n]||'#0a66ff'}
+function toggleCreator(name,btn){
+  if(STATE.followCreators.has(name)){STATE.followCreators.delete(name);btn.classList.remove('on');btn.innerHTML=btn.classList.contains('cre-chip')?'+ 팔로우':'+ 팔로우';toast(`${name} 팔로우를 취소했어요`)}
+  else{STATE.followCreators.add(name);btn.classList.add('on');btn.innerHTML='✓ 팔로잉';toast(`🔔 ${name} 신작 알림을 받아요`)}
+}
+
+/* ============================================================
+   홈
+============================================================ */
+function renderHome(){
+  const savedCount = STATE.saved.size;
+  const rated = Object.keys(STATE.ratings).length;
+  const watching = Object.keys(STATE.status).filter(id=>STATE.status[id]==='watch').map(id=>byId(+id));
+  // 북스타 = 주간 발견-저장 활성 (데모: 기준 1240 + 내 활동 반영)
+  const bookstar = 1240 + savedCount*1 + rated;
+  const recos = [
+    {w:byId(2),why:'#작화미친 #다크판타지 일치',d:'귀멸의 칼날을 봤다면 → 같은 결의 배틀 연출'},
+    {w:byId(5),why:'#로판 #감정선 일치',d:'잔잔한 감정선을 좋아하는 취향 기반 추천'},
+    {w:byId(11),why:'#떡밥 #먼치킨 일치',d:'전개 빠른 사이다 판타지를 찾는다면'},
+    {w:byId(7),why:'#힐링 #입문추천 일치',d:'무거운 작품 사이 쉬어가기 좋은 코미디'},
+  ];
+  const v = document.getElementById('view');
+  v.innerHTML = `
+  <div class="hero">
+    <div class="eyebrow">⚓ 발견과 아카이빙의 바다</div>
+    <h1>본 작품을 기록하고,<br>다음에 볼 작품을 발견하세요</h1>
+    <p>구매가 목적이 아니라, 발견과 기록 그 자체가 목적인 곳. 취향이 맞는 사람의 한 줄 영업글로 다음 정주행을 정하세요.</p>
+    <div class="northstar">
+      <div class="ns"><div class="lab">북극성 · 북스타</div><div class="num">${bookstar.toLocaleString()}<small> 명</small></div><div class="delta">주간 발견·저장 활성 ▲</div></div>
+      <div class="ns"><div class="lab">내가 담은 작품</div><div class="num">${savedCount}<small> 개</small></div><div class="delta">보고싶어요 컬렉션</div></div>
+      <div class="ns"><div class="lab">내가 남긴 평가</div><div class="num">${rated}<small> 개</small></div><div class="delta">큐레이터 활동</div></div>
+    </div>
+  </div>
+
+  ${!STATE.taste?`
+  <div class="card" style="display:flex;align-items:center;gap:16px;padding:18px 22px;margin-bottom:34px;background:linear-gradient(120deg,#eef4ff,#fff)">
+    <div style="font-size:32px">🔮</div>
+    <div style="flex:1"><div style="font-weight:800;font-size:16px">3분 취향 분석, 아직 안 했어요?</div><div style="font-size:13px;color:var(--ink-2);font-weight:600;margin-top:2px">몇 가지만 답하면 딱 맞는 웹툰·애니를 골라드려요.</div></div>
+    <button class="btn btn-blue" style="flex-shrink:0" onclick="go('taste')">분석 시작</button>
+  </div>`:''}
+
+  ${watching.length?`
+  <div class="section">
+    <div class="section-head"><h2>이어서 보기</h2><span class="sub">정주행 중인 작품 — 다음 화부터</span></div>
+    <div class="continue-row">
+      ${watching.map(w=>{const p=STATE.progress[w.id];const total=(w.timeline||[1,2,3,4]).length;const pct=p!==undefined?Math.round((p+1)/total*100):8;
+        const next=w.timeline&&p!==undefined&&p+1<total?w.timeline[p+1][0]:'다음 화';
+        return `<div class="cont-card" onclick="openDetail(${w.id})">
+          <div class="pp" style="background:${grad(w.genres[0])}">${w.type.split(' ')[0]}</div>
+          <div style="flex:1;min-width:0"><div class="t">${w.t}</div>
+            <div class="nx">▶ 이어서: ${next}</div>
+            <div class="cont-bar"><i style="width:${pct}%"></i></div></div>
+        </div>`}).join('')}
+    </div>
+  </div>`:''}
+
+  <div class="section">
+    <div class="section-head"><h2>무드로 발견하기</h2><span class="sub">지금 기분·상황에 맞는 입구</span></div>
+    <div class="mood-row">
+      ${MOODS.map(m=>`<div class="mood" style="background:linear-gradient(140deg,${m.g[0]},${m.g[1]})" onclick="setMood('${m.k}')"><span class="e">${m.e}</span><span class="l">${m.l}</span></div>`).join('')}
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><h2>취향 기반 추천</h2><span class="sub">이래서 비슷해요 — 추천 이유까지</span></div>
+    <div class="reco-row">
+      ${recos.map(({w,why,d})=>`
+        <div class="reco" onclick="openDetail(${w.id})">
+          <div class="pp" style="background:${grad(w.genres[0])}">${w.type.split(' ')[0]}</div>
+          <div class="info">
+            <div class="t">${w.t}</div>
+            <div class="why">🧭 ${why}</div>
+            <div class="desc">${d}</div>
+          </div>
+        </div>`).join('')}
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><h2>큐레이터의 한 줄 영업</h2><span class="sub">사람 냄새 나는 추천</span></div>
+    <div class="reco-row">
+      ${FEED.map(f=>{const w=byId(f.wid);return `
+        <div class="curator">
+          <div class="top">
+            <div class="mini-av" style="background:${f.av}">${f.n[0]}</div>
+            <b>${f.n}</b>
+            <span class="badge-pill" style="background:${f.badge[1]}">${f.badge[0]}</span>
+          </div>
+          <div class="q">“${f.pitch}”</div>
+          <div class="feed-attach" style="margin-top:11px" onclick="openDetail(${w.id})">
+            <div class="pp" style="background:${grad(w.genres[0])}">${w.type.split(' ')[0]}</div>
+            <div><div class="t">${w.t}</div><div class="g">${w.type} · ${w.genres.join('·')} · ★${w.rating}</div></div>
+          </div>
+          <div class="foot"><button onclick="event.stopPropagation();toast('👍 도움돼요!')">👍 도움돼요</button><button onclick="event.stopPropagation();go('follow')">💬 더 보기</button></div>
+        </div>`}).join('')}
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><h2>지금 뜨는 작품</h2><span class="more" onclick="go('works')">전체 보기 →</span></div>
+    <div class="grid works">${WORKS.slice(0,6).map(posterCard).join('')}</div>
+  </div>`;
+}
+
+/* ============================================================
+   작품관 (브라우즈 + 검색)
+============================================================ */
+function renderWorks(){
+  const q = STATE.search.trim().toLowerCase();
+  const mood = STATE.moodFilter?moodById(STATE.moodFilter):null;
+  let list = WORKS.slice();
+  if(mood) list = list.filter(mood.f);
+  if(q) list = list.filter(w=>(w.t+w.genres.join()+w.tags.join()+w.type).toLowerCase().includes(q));
+  const v=document.getElementById('view');
+  const genres=[...new Set(WORKS.flatMap(w=>w.genres))];
+  const active = q || mood;
+  v.innerHTML=`
+  <div class="section">
+    <div class="section-head">
+      <h2>작품관</h2>
+      <span class="sub">웹툰 ${WORKS.filter(w=>w.type.includes('웹툰')).length} · 애니 ${WORKS.filter(w=>w.type.includes('애니')).length} · 총 ${WORKS.length}편 (MVP)</span>
+    </div>
+    <div style="font-size:12.5px;color:var(--ink-3);font-weight:700;margin-bottom:9px">🛋️ 무드로 발견하기</div>
+    <div class="mood-row" style="margin-bottom:16px">
+      ${MOODS.map(m=>`<div class="mood" style="height:78px;width:142px;background:linear-gradient(140deg,${m.g[0]},${m.g[1]});${STATE.moodFilter===m.k?'outline:3px solid var(--ink);outline-offset:2px':''}" onclick="setMood('${m.k}')"><span class="e" style="font-size:20px">${m.e}</span><span class="l">${m.l}</span></div>`).join('')}
+    </div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px">
+      ${genres.map(g=>`<button class="chip" onclick="document.getElementById('searchInput').value='${g}';onSearch('${g}')">#${g}</button>`).join('')}
+    </div>
+    ${active?`<div style="font-size:13px;color:var(--ink-2);font-weight:600;margin-bottom:14px">${mood?`<b style="color:var(--ink)">${mood.e} ${mood.l}</b>`:''}${mood&&q?' · ':''}${q?`“${STATE.search}”`:''} 결과 ${list.length}편 · <button style="color:var(--accent);font-weight:700" onclick="clearFilters()">전체 보기</button></div>`:''}
+    ${list.length?`<div class="grid works">${list.map(posterCard).join('')}</div>`
+      :`<div class="empty"><div class="e">🌊</div><p>조건에 맞는 작품이 아직 없어요.<br>다른 무드나 키워드로 찾아보세요.</p></div>`}
+  </div>
+
+  <div class="section">
+    <div class="section-head"><h2>시리즈 순서</h2><span class="sub">연관작을 트리로 · 본 항목 체크 → 다음 볼 작품 자동 표시</span></div>
+    ${seriesTreesHTML()}
+  </div>`;
+}
+function setMood(k){STATE.moodFilter=(STATE.moodFilter===k?null:k);STATE.search='';const si=document.getElementById('searchInput');if(si)si.value='';if(CURRENT!=='works')go('works');else renderWorks();}
+function clearFilters(){STATE.moodFilter=null;STATE.search='';const si=document.getElementById('searchInput');if(si)si.value='';renderWorks();}
+function onSearch(val){
+  STATE.search=val;
+  if(CURRENT!=='works') go('works'); else renderWorks();
+}
+
+/* ============================================================
+   작품 상세 (왓챠피디아 스타일)
+============================================================ */
+let _detailId=null;
+function openDetail(id){
+  _detailId=id; CURRENT='works'; renderTabs();
+  window.scrollTo({top:0,behavior:'smooth'});
+  const w=byId(id);
+  const saved=STATE.saved.has(id);
+  const my=STATE.ratings[id]||0;
+  const v=document.getElementById('view');
+  v.innerHTML=`
+  <button class="back" onclick="go('works')">← 작품관으로</button>
+
+  <div class="detail-hero">
+    <div class="detail-poster" style="background:${grad(w.genres[0])}">${w.t}</div>
+    <div class="detail-info">
+      <h1>${w.t}</h1>
+      <div class="meta-line">${w.type} · ${w.status} / ${w.genres.join(' · ')} · ${w.age} · 예상 완주 ${w.hours}시간</div>
+      <div>${(()=>{const s=signalFor(w);return `<span class="signal ${s.cls}">${s.ic} ${s.t}</span>`})()}</div>
+      <div class="rating-block">
+        <div class="avg"><span class="n">${w.rating}</span><span class="c">★ 평균 별점<br>${w.count.toLocaleString()}명 참여</span></div>
+        <div class="myrate">
+          <span class="lab">내 별점 ${my?`(${my}.0)`:''}</span>
+          <div class="stars" id="stars">${[1,2,3,4,5].map(i=>`<span class="s ${i<=my?'on':''}" data-v="${i}" onclick="rate(${id},${i})">★</span>`).join('')}</div>
+        </div>
+      </div>
+      <div class="myrate" style="margin:16px 0 4px">
+        <span class="lab" style="margin-bottom:7px">시청 상태 · 아카이빙</span>
+        <div class="status-seg" id="statusSeg">
+          ${Object.entries(STATUS_META).map(([k,m])=>`<button class="${m.cls} ${STATE.status[id]===k?'on':''}" onclick="setStatus(${id},'${k}')">${m.e} ${m.l}</button>`).join('')}
+        </div>
+      </div>
+      <div class="action-row">
+        <button class="btn btn-line ${saved?'on':''}" id="saveBtn" onclick="toggleSave(${id})">${saved?'✓ 보고싶어요 담음':'+ 보고싶어요'}</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('cmtInput').focus()">💬 코멘트 남기기</button>
+        <button class="btn btn-ghost" onclick="toast('🔗 링크가 복사되었어요')">↗ 공유</button>
+      </div>
+      ${w.status==='연재중'?`<div class="notify-row">🔔 다음 화·시즌이 나오면 알려드려요<div class="sw ${STATE.notify.has(id)?'on':''}" id="notifySw" onclick="toggleNotify(${id})"></div></div>`:''}
+      <div class="tag-row">${w.tags.map(t=>`<button class="chip tag" onclick="document.getElementById('searchInput').value='${t}';onSearch('${t}')">#${t}</button>`).join('')}</div>
+    </div>
+  </div>
+
+  <div class="detail-grid">
+    <div>
+      <div class="block">
+        <h3>개요</h3>
+        <p class="synopsis">${w.syn}</p>
+      </div>
+
+      <div class="block">
+        <h3>어디서 보나</h3>
+        <div class="platforms">
+          ${w.plat.map(p=>`<div class="plat" onclick="toast('${p[0]}(으)로 이동합니다')"><span class="pill" style="background:${p[2]}">${p[0][0]}</span>${p[0]} · ${p[1]}</div>`).join('')}
+        </div>
+      </div>
+
+      ${w.book?`
+      <div class="block">
+        <h3>단행본 구매</h3>
+        <div class="buy-card">
+          <div class="buy-ic">📚</div>
+          <div style="flex:1;min-width:0"><div class="buy-t">종이책 단행본 소장</div><div class="buy-p">${w.book.price}</div></div>
+          <a class="btn btn-primary buy-btn" href="${w.book.url}${encodeURIComponent(w.t)}" target="_blank" rel="noopener" onclick="toast('${w.book.store}에서 「${w.t}」 검색')">${w.book.store}에서 구매 →</a>
+        </div>
+      </div>`:''}
+
+      ${w.timeline?`
+      <div class="block">
+        <h3>시리즈 타임라인</h3>
+        <div class="tl-toggle">
+          <button class="on" onclick="this.classList.add('on');this.nextElementSibling.classList.remove('on');toast('방영 순서로 정렬')">방영순</button>
+          <button onclick="this.classList.add('on');this.previousElementSibling.classList.remove('on');toast('세계관 시간순으로 정렬')">세계관 시간순</button>
+        </div>
+        <span class="chip" style="margin-bottom:8px;color:var(--blue);background:#eef4ff">✓ 선행 불필요 표시 · 항목을 누르면 "여기까지 봤어요" 기록</span>
+        <div id="tlList">${timelineHTML(w,id)}</div>
+      </div>`:''}
+
+      <div class="block">
+        <h3>코멘트 · 평가 <span style="color:var(--ink-3);font-weight:700">${w.count.toLocaleString()}</span></h3>
+        <div class="cmt-input">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px">
+            <span style="font-size:12.5px;font-weight:700;color:var(--ink-3)">내 별점</span>
+            <div class="stars" id="cmtStars" style="font-size:21px">${[1,2,3,4,5].map(i=>`<span class="s ${i<=(STATE.ratings[id]||0)?'on':''}" data-v="${i}" onclick="setCmtRate(${id},${i})">★</span>`).join('')}</div>
+          </div>
+          <textarea id="cmtInput" placeholder="이 작품, 한 줄로 영업한다면? (스포일러는 가려서 작성해요)"></textarea>
+          <div class="row">
+            <span style="font-size:12.5px;color:var(--ink-3);font-weight:600">별점 + 평가글이 함께 등록돼요</span>
+            <button class="btn btn-primary" style="padding:9px 18px" onclick="postComment(${id})">등록</button>
+          </div>
+        </div>
+        <div id="cmtList" style="margin-top:8px">
+          ${(w.reviews.length?w.reviews:[{n:'올블루 유저',av:'#94a3b8',badge:['신입 항해사','#94a3b8'],r:Math.round(w.rating),reco:byId(w.related[0]).t,b:'아직 코멘트가 적어요. 첫 한 줄 영업글을 남겨보세요!',help:0,cmt:0}]).map(rv=>commentHTML(rv)).join('')}
+        </div>
+      </div>
+    </div>
+
+    <aside>
+      <div class="card side-card">
+        <h3 style="font-size:15px;font-weight:800;margin-bottom:6px">작품 정보</h3>
+        <table class="info-table">
+          ${Object.entries(w.info).map(([k,val])=>{
+            const followable=['원작','작화','제작사','감독'].includes(k)&&val&&val!=='-'&&!String(val).includes('가상');
+            const on=followable&&STATE.followCreators.has(val);
+            return `<tr><td class="k">${k}</td><td class="v">${val}${followable?`<span class="cre-chip ${on?'on':''}" onclick="toggleCreator('${String(val).replace(/'/g,'')}',this)">${on?'✓ 팔로잉':'+ 팔로우'}</span>`:''}</td></tr>`}).join('')}
+          <tr><td class="k">상태</td><td class="v">${w.status}</td></tr>
+        </table>
+      </div>
+      <div class="card side-card" style="margin-top:16px">
+        <h3 style="font-size:15px;font-weight:800;margin-bottom:4px">이 작품을 감상한 유저의 추천작</h3>
+        ${w.related.map((rid,i)=>{const r=byId(rid);const m=[84,72,68][i]||70;return `
+          <div class="reco-mini" onclick="openDetail(${rid})">
+            <div class="pp" style="background:${grad(r.genres[0])}"></div>
+            <div><div class="t">${r.t}</div><div class="s">${r.type} · ${r.status} · ${r.genres[0]}</div><div class="match">취향 ${m}% 일치</div></div>
+          </div>`}).join('')}
+      </div>
+    </aside>
+  </div>`;
+}
+function commentHTML(rv){
+  return `<div class="cmt">
+    <div class="head">
+      <div class="mini-av" style="background:${rv.av}">${rv.n[0]}</div>
+      <span class="nm">${rv.n}</span>
+      <span class="badge-pill" style="background:${rv.badge[1]}">${rv.badge[0]}</span>
+      <span class="stars-sm">${'★'.repeat(rv.r)}${'☆'.repeat(5-rv.r)}</span>
+    </div>
+    ${rv.reco?`<div class="reco-tag" style="margin-top:9px">이거 좋아하면 → ${rv.reco}</div>`:''}
+    <div class="body">${rv.b}</div>
+    <div class="foot"><button onclick="bumpHelp(this)">👍 도움돼요 <b>${rv.help}</b></button><button>💬 댓글 ${rv.cmt}</button></div>
+  </div>`;
+}
+function rate(id,v){
+  STATE.ratings[id]=v;logView(id);
+  document.querySelectorAll('#stars .s').forEach(s=>s.classList.toggle('on',+s.dataset.v<=v));
+  document.querySelector('.myrate .lab').textContent=`내 별점 (${v}.0)`;
+  toast(`⭐ ${v}점 평가 완료 · 큐레이터 활동 +1`);
+}
+function toggleSave(id){
+  const b=document.getElementById('saveBtn');
+  if(STATE.saved.has(id)){STATE.saved.delete(id);b.classList.remove('on');b.textContent='+ 보고싶어요';toast('보고싶어요에서 뺐어요')}
+  else{STATE.saved.add(id);b.classList.add('on');b.textContent='✓ 보고싶어요 담음';toast('🌊 보고싶어요에 담았어요 · 컬렉션 도감에 추가')}
+}
+function setCmtRate(id,n){
+  STATE.ratings[id]=n;logView(id);
+  document.querySelectorAll('#cmtStars .s').forEach(s=>s.classList.toggle('on',+s.dataset.v<=n));
+  document.querySelectorAll('#stars .s').forEach(s=>s.classList.toggle('on',+s.dataset.v<=n));
+  const lab=document.querySelector('.myrate .lab');if(lab)lab.textContent=`내 별점 (${n}.0)`;
+}
+function postComment(id){
+  const ta=document.getElementById('cmtInput');const txt=ta.value.trim();
+  if(!txt){toast('한 줄이라도 영업글을 적어주세요');ta.focus();return}
+  if(!STATE.ratings[id]){toast('⭐ 별점을 먼저 선택해주세요');return}
+  STATE.myReviews=(STATE.myReviews||0)+1;
+  const rv={n:STATE.profile.name+'(나)',av:'#ff2e63',badge:repBadge(),r:STATE.ratings[id],reco:'',b:txt,help:0,cmt:0};
+  const list=document.getElementById('cmtList');
+  list.insertAdjacentHTML('afterbegin',commentHTML(rv));
+  ta.value='';toast('💬 별점과 평가글이 등록됐어요');
+}
+function bumpHelp(btn){const b=btn.querySelector('b');b.textContent=+b.textContent+1;btn.style.color='var(--accent)'}
+
+/* v2: 시청 상태 / 연재 알림 / 진행도 기록 */
+function syncStatusSeg(id){
+  const seg=document.getElementById('statusSeg');
+  if(seg)seg.querySelectorAll('button').forEach((b,idx)=>b.classList.toggle('on',Object.keys(STATUS_META)[idx]===STATE.status[id]));
+}
+function setStatus(id,k){
+  if(STATE.status[id]===k){delete STATE.status[id]}else{STATE.status[id]=k;logView(id)}
+  syncStatusSeg(id);
+  const m=STATUS_META[k];
+  toast(STATE.status[id]?`${m.e} ‘${m.l}’(으)로 기록했어요`:'상태 기록을 해제했어요');
+}
+function toggleNotify(id){
+  const sw=document.getElementById('notifySw');
+  if(STATE.notify.has(id)){STATE.notify.delete(id);sw.classList.remove('on');toast('알림을 껐어요')}
+  else{STATE.notify.add(id);sw.classList.add('on');toast('🔔 새 화·시즌 알림을 켰어요')}
+}
+function timelineHTML(w,id){
+  const p=STATE.progress[id];
+  return w.timeline.map((t,i)=>{
+    const watched=p!==undefined&&i<=p;
+    return `<div class="tl-item" style="cursor:pointer" onclick="setProgress(${id},${i})">
+      <span class="no" style="${watched?'background:var(--blue);color:#fff':''}">${watched?'✓':i+1}</span>
+      <span class="name">${t[0]}</span>
+      <span class="sub">${i===p?'📍 여기까지 봤어요':t[1]}</span>
+    </div>`}).join('');
+}
+function setProgress(id,i){
+  STATE.progress[id]=i;
+  if(!STATE.status[id]){STATE.status[id]='watch';syncStatusSeg(id)}
+  const list=document.getElementById('tlList');if(list)list.innerHTML=timelineHTML(byId(id),id);
+  toast(`📍 ${byId(id).timeline[i][0]}까지 봤어요로 기록`);
+}
+
+/* ============================================================
+   팔로우 전용관
+============================================================ */
+function renderFollow(){
+  const v=document.getElementById('view');
+  v.innerHTML=`
+  <div class="section">
+    <div class="section-head"><h2>팔로우 전용관</h2><span class="sub">큐레이터 · 작가 · 제작사의 새 소식</span></div>
+    <div style="font-size:12.5px;color:var(--ink-3);font-weight:700;margin-bottom:9px">🔔 팔로우한 작가·제작사 신작 알림</div>
+    <div style="display:flex;gap:13px;overflow-x:auto;padding-bottom:14px;margin-bottom:24px;scrollbar-width:none">
+      ${CREATORS.map(c=>{const on=STATE.followCreators.has(c.n);return `
+        <div class="cre-card" style="cursor:pointer" onclick="openStudio('${c.n}')">
+          <div class="ic" style="background:${c.color}">${(STUDIOS[c.n]?STUDIOS[c.n].logo:c.n[0].toUpperCase())}</div>
+          <div class="nm">${c.n}</div><div class="role">${c.role}</div>
+          <div class="new">🆕 ${c.new}</div>
+          <button class="${on?'on':''}" onclick="event.stopPropagation();toggleCreator('${c.n}',this)">${on?'✓ 팔로잉':'+ 팔로우'}</button>
+        </div>`}).join('')}
+    </div>
+    <div style="font-size:12.5px;color:var(--ink-3);font-weight:700;margin-bottom:11px">💬 큐레이터의 한 줄 영업</div>
+    <div class="feed">
+      ${FEED.map((f,idx)=>{const w=byId(f.wid);const fo=STATE.following.has(f.n);return `
+        <div class="feed-card">
+          <div class="top">
+            <div class="mini-av" style="background:${f.av}">${f.n[0]}</div>
+            <div>
+              <div class="nm">${f.n} <span class="badge-pill" style="background:${f.badge[1]}">${f.badge[0]}</span></div>
+              <div class="act">${f.act}</div>
+            </div>
+            <button class="fbtn ${fo?'on':''}" onclick="toggleFollow('${f.n}',this)">${fo?'팔로잉':'+ 팔로우'}</button>
+          </div>
+          <div class="feed-attach" onclick="openDetail(${w.id})">
+            <div class="pp" style="background:${grad(w.genres[0])}">${w.type.split(' ')[0]}</div>
+            <div>
+              <div class="t">${w.t}</div>
+              <div class="g">${w.type} · ${w.genres.join('·')} · ★${w.rating}</div>
+              <div class="pitch">“${f.pitch}”</div>
+            </div>
+          </div>
+          <div class="foot">
+            <button onclick="bumpLike(this)">❤️ 좋아요 <b>${[421,98,176][idx]}</b></button>
+            <button onclick="toast('💬 댓글 기능 준비중')">💬 댓글 ${[23,7,12][idx]}</button>
+            <button onclick="toast('🔗 영업글을 공유했어요')">↗ 공유</button>
+          </div>
+        </div>`}).join('')}
+    </div>
+  </div>`;
+}
+function toggleFollow(n,btn){
+  if(STATE.following.has(n)){STATE.following.delete(n);btn.classList.remove('on');btn.textContent='+ 팔로우';toast(`${n}님 팔로우를 취소했어요`)}
+  else{STATE.following.add(n);btn.classList.add('on');btn.textContent='팔로잉';toast(`${n}님을 팔로우했어요`)}
+}
+function bumpLike(btn){const b=btn.querySelector('b');b.textContent=+b.textContent+1;btn.style.color='var(--accent)'}
+
+/* ============================================================
+   v3: 제작사 페이지
+============================================================ */
+let STU={name:null,genre:'all',type:'all',status:'all',sort:'recent',unseen:false};
+const STU_CMT={
+  'ufotable':[{n:'심야애니러',c:'#0a66ff',b:'작화로는 여기가 국밥. 믿고 보는 스튜디오.',h:88}],
+  'MAPPA':[{n:'탄지로형',c:'#ff2e63',b:'연출 미쳤는데 제작 환경 이슈는 늘 아쉽다.',h:54}],
+};
+function openStudio(name){
+  const s=STUDIOS[name]||AUTHORS[name];
+  if(!s){toast('정보가 준비 중이에요');return}
+  STU={name,genre:'all',type:'all',status:'all',sort:'recent',unseen:false};
+  CURRENT='follow';renderTabs();window.scrollTo({top:0,behavior:'smooth'});
+  renderStudio();
+}
+function studioFilteredWorks(){
+  let ws=studioWorks(STU.name);
+  if(STU.genre!=='all')ws=ws.filter(w=>w.genres.includes(STU.genre));
+  if(STU.type!=='all')ws=ws.filter(w=>w.type.includes(STU.type));
+  if(STU.status!=='all')ws=ws.filter(w=>w.status===STU.status);
+  if(STU.unseen){const seen=seenIds();ws=ws.filter(w=>!seen.has(w.id))}
+  ws=ws.slice();
+  if(STU.sort==='rating')ws.sort((a,b)=>b.rating-a.rating);
+  else if(STU.sort==='popular')ws.sort((a,b)=>b.count-a.count);
+  else ws.sort((a,b)=>studioYear(b)-studioYear(a));
+  return ws;
+}
+function studioSet(k,val){STU[k]=val;renderStudio()}
+function studioUnseen(){STU.unseen=!STU.unseen;renderStudio()}
+function renderStudio(){
+  const name=STU.name;
+  const s=STUDIOS[name]||AUTHORS[name];
+  const isStudio=!!STUDIOS[name];
+  const all=studioWorks(name);
+  const list=studioFilteredWorks();
+  const avg=all.length?(all.reduce((a,w)=>a+w.rating,0)/all.length).toFixed(1):'-';
+  const done=all.filter(w=>w.status==='완결').length;
+  const onair=all.filter(w=>w.status==='연재중').length;
+  const inLib=all.filter(w=>STATE.saved.has(w.id)||STATE.status[w.id]).length;
+  const top3=all.slice().sort((a,b)=>b.rating-a.rating).slice(0,3);
+  // 장르 분포
+  const gc={};all.forEach(w=>w.genres.forEach(g=>gc[g]=(gc[g]||0)+1));
+  const gmax=Math.max(1,...Object.values(gc));
+  const genreOpts=[...new Set(all.flatMap(w=>w.genres))];
+  const typeOpts=[...new Set(all.map(w=>w.type.split(' ')[0]))];
+  // 타임라인 (연도별)
+  const byYear={};all.forEach(w=>{const y=studioYear(w);(byYear[y]=byYear[y]||[]).push(w)});
+  const years=Object.keys(byYear).sort((a,b)=>b-a);
+  const seriesOf=SERIES.find(se=>all.some(w=>w.id===se.wid));
+  const on=STATE.followCreators.has(name);
+  const fo=name; // follow uses creators set
+  const v=document.getElementById('view');
+  v.innerHTML=`
+  <button class="back" onclick="go('follow')">← 팔로우 전용관으로</button>
+  <div class="studio-hero">
+    <div class="studio-logo" style="background:${s.color||'#0a66ff'}">${s.logo||name[0]}</div>
+    <div class="studio-hd">
+      <h1>${s.ko||name} ${isStudio?`<span class="studio-status">${s.status}</span>`:`<span class="studio-status" style="background:#eef4ff;color:var(--blue)">${s.role||'작가'}</span>`}</h1>
+      <div class="en">${s.en||name}</div>
+      <div class="meta">${s.country||''}${s.founded?` · ${s.founded}년 설립`:''} · 제작 ${all.length}편${avg!=='-'?` · 평균 ★${avg}`:''}</div>
+      <div class="tagline">“${s.tagline||''}”</div>
+      <div class="studio-links">
+        <button class="foll ${on?'on':''}" onclick="toggleCreator('${name}',this);renderStudio()">${on?'✓ 팔로잉 (신작 알림)':'+ 팔로우'}</button>
+        ${s.site?`<a href="${s.site}" target="_blank" rel="noopener" onclick="toast('공식 사이트로 이동')">🌐 공식 사이트</a>`:''}
+        ${s.sns?`<a href="#" onclick="event.preventDefault();toast('${s.sns}')">𝕏 ${s.sns}</a>`:''}
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <p class="synopsis">${s.desc||''}</p>
+  </div>
+
+  <div class="block">
+    <h3>통계 · 평가</h3>
+    <div class="studio-stats">
+      <div class="ss-card"><div class="n">${all.length}</div><div class="l">총 제작 편수</div></div>
+      <div class="ss-card"><div class="n">★${avg}</div><div class="l">평균 별점</div></div>
+      <div class="ss-card"><div class="n">${all.length?Math.round(done/all.length*100):0}%</div><div class="l">완결 비율</div></div>
+      <div class="ss-card"><div class="n">${onair}</div><div class="l">연재·방영 중</div></div>
+      <div class="ss-card"><div class="n">${inLib}</div><div class="l">내 보관함</div></div>
+    </div>
+    <div style="font-size:13px;font-weight:800;margin:16px 0 10px">장르 분포</div>
+    <div class="gdist">
+      ${Object.entries(gc).sort((a,b)=>b[1]-a[1]).map(([g,n])=>`<div class="row"><span class="gl">${g}</span><span class="gt"><i style="width:${Math.round(n/gmax*100)}%"></i></span><span class="gn">${n}</span></div>`).join('')}
+    </div>
+  </div>
+
+  <div class="block">
+    <h3>대표작 TOP 3 <span style="color:var(--ink-3);font-weight:700;font-size:13px">유저 평점순</span></h3>
+    <div class="grid works">${top3.map(posterCard).join('')}</div>
+  </div>
+
+  <div class="block">
+    <h3>작품 목록 <span style="color:var(--ink-3);font-weight:700;font-size:13px">${list.length}편</span></h3>
+    <div class="sfilter2">
+      <select onchange="studioSet('genre',this.value)"><option value="all">장르 전체</option>${genreOpts.map(g=>`<option ${STU.genre===g?'selected':''}>${g}</option>`).join('')}</select>
+      <select onchange="studioSet('type',this.value)"><option value="all">타입 전체</option>${typeOpts.map(t=>`<option ${STU.type===t?'selected':''}>${t}</option>`).join('')}</select>
+      <select onchange="studioSet('status',this.value)"><option value="all">상태 전체</option><option ${STU.status==='연재중'?'selected':''}>연재중</option><option ${STU.status==='완결'?'selected':''}>완결</option></select>
+      <select onchange="studioSet('sort',this.value)"><option value="recent" ${STU.sort==='recent'?'selected':''}>최신순</option><option value="rating" ${STU.sort==='rating'?'selected':''}>평점순</option><option value="popular" ${STU.sort==='popular'?'selected':''}>인기순</option></select>
+      <button class="chip ${STU.unseen?'tag':''}" style="cursor:pointer" onclick="studioUnseen()">${STU.unseen?'✓ ':''}아직 안 본 것만</button>
+    </div>
+    ${list.length?`<div class="grid works">${list.map(posterCard).join('')}</div>`:`<div class="empty"><div class="e">🔍</div><p>조건에 맞는 작품이 없어요.</p></div>`}
+  </div>
+
+  ${isStudio?`
+  <div class="block">
+    <h3>제작진</h3>
+    <div style="font-size:12.5px;color:var(--ink-3);font-weight:700;margin-bottom:7px">대표 감독</div>
+    <div class="crew-wrap" style="margin-bottom:14px">${(s.directors||[]).map(d=>`<button class="crew-chip" onclick="openDirector('${d}','${name}')">🎬 ${d}</button>`).join('')}</div>
+    <div style="font-size:12.5px;color:var(--ink-3);font-weight:700;margin-bottom:7px">주요 성우진</div>
+    <div class="crew-wrap" style="margin-bottom:14px">${(s.cast||[]).map(c=>`<span class="crew-chip static">🎙️ ${c}</span>`).join('')}</div>
+    <div style="font-size:12.5px;color:var(--ink-3);font-weight:700;margin-bottom:7px">주요 스태프 · 협업</div>
+    <div class="crew-wrap">${(s.staff||[]).concat((s.partners||[]).map(p=>'🤝 '+p)).map(c=>`<span class="crew-chip static">${c}</span>`).join('')}</div>
+  </div>`:''}
+
+  <div class="block">
+    <h3>타임라인</h3>
+    ${seriesOf?`<div class="stl-item"><span class="yr">시리즈</span><span class="wk" onclick="go('works')">${seriesOf.name} · ${seriesOf.entries.length}개 시즌·극장판 묶음 ↗</span></div>`:''}
+    ${years.map(y=>`<div class="stl-item"><span class="yr">${y}</span><div>${byYear[y].map(w=>`<div class="wk" onclick="openDetail(${w.id})">${w.t} · ★${w.rating}</div>`).join('')}</div></div>`).join('')}
+  </div>
+
+  ${(s.upcoming&&s.upcoming.length)||(s.news&&s.news.length)?`
+  <div class="block">
+    <h3>신작 · 소식</h3>
+    ${(s.upcoming||[]).map(u=>`<div class="stl-item"><span class="yr" style="color:var(--accent)">예정</span><span class="wk static">${u}</span></div>`).join('')}
+    ${(s.news||[]).map(nw=>`<div class="stl-item"><span class="yr" style="color:var(--ink-3);font-size:12px">뉴스</span><a class="wk" href="${nw[1]}" onclick="event.preventDefault();toast('관련 뉴스로 이동')" style="text-decoration:none">${nw[0]} ↗</a></div>`).join('')}
+  </div>`:''}
+
+  ${s.similar&&s.similar.length?`
+  <div class="block">
+    <h3>이 제작사를 좋아하면</h3>
+    <div class="sim-row">
+      ${s.similar.map(sn=>{const ss=STUDIOS[sn];if(!ss)return '';return `<div class="sim-card" onclick="openStudio('${sn}')"><div class="lg" style="background:${ss.color}">${ss.logo}</div><div class="nm">${sn}</div><div class="rl">${ss.tagline.slice(0,14)}…</div></div>`}).join('')}
+    </div>
+  </div>`:''}
+
+  <div class="block">
+    <h3>유저 코멘트</h3>
+    <div class="cmt-input">
+      <textarea id="stuCmt" placeholder="이 제작사에 대한 한 줄 평가를 남겨보세요"></textarea>
+      <div class="row"><span style="font-size:12.5px;color:var(--ink-3);font-weight:600">제작사 단위로도 평가가 쌓여요</span><button class="btn btn-primary" style="padding:9px 18px" onclick="postStudioCmt('${name}')">등록</button></div>
+    </div>
+    <div id="stuCmtList" style="margin-top:8px">${(STU_CMT[name]||[]).map(stuCmtHTML).join('')||`<div style="padding:14px;color:var(--ink-3);font-weight:600;font-size:13px">첫 코멘트를 남겨보세요!</div>`}</div>
+  </div>`;
+}
+function stuCmtHTML(c){return `<div class="cmt"><div class="head"><div class="mini-av" style="background:${c.c}">${c.n[0]}</div><span class="nm">${c.n}</span></div><div class="body">${c.b}</div><div class="foot"><button onclick="bumpHelp(this)">👍 도움돼요 <b>${c.h}</b></button></div></div>`}
+function postStudioCmt(name){
+  const ta=document.getElementById('stuCmt');const t=ta.value.trim();if(!t){toast('내용을 입력해주세요');return}
+  (STU_CMT[name]=STU_CMT[name]||[]).unshift({n:STATE.profile.name+'(나)',c:'#ff2e63',b:t,h:0});
+  document.getElementById('stuCmtList').innerHTML=STU_CMT[name].map(stuCmtHTML).join('');
+  ta.value='';toast('💬 제작사 코멘트를 등록했어요');
+}
+function openDirector(name,studio){
+  const ws=WORKS.filter(w=>String(w.info.감독||'').includes(name));
+  const rep=ws.length?ws:studioWorks(studio);
+  openModal(`<div class="modal-head"><h2>🎬 ${name}</h2><button class="x" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">
+      <p style="font-size:13.5px;color:var(--ink-2);font-weight:600;margin-bottom:14px">${studio} 소속 감독 · 대표 참여작</p>
+      ${rep.map(w=>`<div class="reco-mini" onclick="closeModal();openDetail(${w.id})"><div class="pp" style="background:${grad(w.genres[0])}"></div><div><div class="t">${w.t}</div><div class="s">${w.type} · ★${w.rating}</div></div></div>`).join('')}
+    </div>`);
+}
+
+/* ============================================================
+   v3: 시리즈 트리 (작품관)
+============================================================ */
+function seriesTreesHTML(){
+  return `<div class="series-grid">${SERIES.map((se,si)=>{
+    const total=se.entries.length;
+    const doneN=se.entries.filter((e,ei)=>STATE.seriesProgress.has(si+'-'+ei)).length;
+    let nextShown=false;
+    return `<div class="series-card">
+      <div class="sh"><span class="sd" style="background:${se.color}"></span><span class="t">${se.name}</span><span class="c">${doneN}/${total} 시청</span></div>
+      ${se.entries.map((e,ei)=>{
+        const done=STATE.seriesProgress.has(si+'-'+ei);
+        const isNext=!done&&!nextShown;if(isNext)nextShown=true;
+        return `<div class="snode ${done?'done':''} ${isNext?'next':''}">
+          <div class="ck" onclick="event.stopPropagation();toggleSeries(${si},${ei})">✓</div>
+          <div style="flex:1;min-width:0" onclick="openDetail(${e.wid})"><div class="nm">${e.t}</div><div class="sub">${e.sub}</div></div>
+          ${isNext?'<span class="nexttag">다음 시청</span>':`<span class="open" onclick="openDetail(${e.wid})">›</span>`}
+        </div>`}).join('')}
+    </div>`}).join('')}</div>`;
+}
+function toggleSeries(si,ei){
+  const key=si+'-'+ei;
+  if(STATE.seriesProgress.has(key))STATE.seriesProgress.delete(key);else STATE.seriesProgress.add(key);
+  if(CURRENT==='works')renderWorks();
+}
+
+/* ============================================================
+   콘텐츠관 (덕질은 여기서) — 미니 서비스
+============================================================ */
+const HALL=[
+  {k:'worldcup',emo:'🏆',t:'이상형 월드컵',d:'내 인생작 토너먼트로 가리기',g:['#7c3aed','#c026d3'],live:false},
+  {k:'no1',emo:'📈',t:'내 작품 1등 만들기',d:'유저 영업 지수로 실시간 순위',g:['#e11551','#ff2e63'],live:true},
+  {k:'tagvote',emo:'🏷️',t:'주접 태그 투표소',d:'유저가 만든 작품 태그 투표',g:['#0a66ff','#00c6ff'],live:false},
+  {k:'scene',emo:'🎬',t:'오늘의 명장면',d:'유저가 추천한 장면 모음',g:['#d97706','#f59e0b'],live:false},
+  {k:'attend',emo:'📅',t:'출석체크 이벤트',d:'매일 출석하고 포인트 받기',g:['#0f766e','#10b981'],live:false},
+  {k:'predict',emo:'🔮',t:'신작 등수 맞추기',d:'이번 분기 신작 순위 예측',g:['#1d4ed8','#3b82f6'],live:true},
+];
+function renderHall(){
+  const v=document.getElementById('view');
+  v.innerHTML=`
+  <div class="section">
+    <div class="section-head"><h2>콘텐츠관</h2><span class="sub">덕질은 여기서 — 본질 흐리지 않게 분리한 재미 탭</span></div>
+    <div class="hall-grid">
+      ${HALL.map(h=>`
+        <div class="hall-card" style="background:linear-gradient(140deg,${h.g[0]},${h.g[1]})" onclick="openHall('${h.k}')">
+          ${h.live?'<span class="live">LIVE</span>':''}
+          <span class="emo">${h.emo}</span>
+          <div><h3>${h.t}</h3><p>${h.d}</p></div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+function openHall(k){({worldcup:hallWorldcup,no1:hallNo1,tagvote:hallTagvote,scene:hallScene,attend:hallAttend,predict:hallPredict})[k]()}
+
+/* 이상형 월드컵 */
+let WC={pool:[],round:0,winners:[],i:0,size:8};
+function hallWorldcup(){
+  const pool=[...WORKS].sort(()=>Math.random()-.5).slice(0,8);
+  WC={pool,round:0,winners:[],i:0,size:8};
+  openModal(wcShell()); wcRender();
+}
+function wcShell(){return `
+  <div class="modal-head"><h2>🏆 이상형 월드컵</h2><button class="x" onclick="closeModal()">✕</button></div>
+  <div class="modal-body"><div class="wc-prog"><i id="wcProg" style="width:0%"></i></div><div id="wcStage" class="wc-stage"></div></div>`;
+}
+function wcRender(){
+  const stage=document.getElementById('wcStage');
+  const roundNames={8:'8강',4:'4강',2:'결승'};
+  const total=WC.pool.length;
+  if(total===1){
+    const w=WC.pool[0];
+    document.getElementById('wcProg').style.width='100%';
+    stage.innerHTML=`<div class="wc-round">🎉 우승</div>
+      <div style="max-width:200px;margin:0 auto" class="wc-pick">
+        <div class="img" style="background:${grad(w.genres[0])};aspect-ratio:3/4">${w.t}</div></div>
+      <h2 style="margin:16px 0 6px;font-size:22px">${w.t}</h2>
+      <p style="color:var(--ink-2);font-size:14px">당신의 인생작이 결정됐어요!</p>
+      <button class="btn btn-primary" style="margin-top:18px" onclick="openDetail(${w.id});closeModal()">작품 보러가기</button>
+      <button class="btn btn-ghost" style="margin-top:8px" onclick="hallWorldcup()">다시 하기</button>`;
+    return;
+  }
+  const a=WC.pool[WC.i], b=WC.pool[WC.i+1];
+  document.getElementById('wcProg').style.width=(WC.i/total*100)+'%';
+  stage.innerHTML=`<div class="wc-round">${roundNames[total]||total+'강'} · ${WC.i/2+1} / ${total/2}</div>
+    <div class="wc-pair">
+      <div class="wc-pick" onclick="wcPick(0)"><div class="img" style="background:${grad(a.genres[0])}">${a.t}</div><div class="nm">${a.t}</div></div>
+      <div class="wc-vs">VS</div>
+      <div class="wc-pick" onclick="wcPick(1)"><div class="img" style="background:${grad(b.genres[0])}">${b.t}</div><div class="nm">${b.t}</div></div>
+    </div>`;
+}
+function wcPick(side){
+  WC.winners.push(WC.pool[WC.i+side]); WC.i+=2;
+  if(WC.i>=WC.pool.length){WC.pool=WC.winners;WC.winners=[];WC.i=0}
+  wcRender();
+}
+
+/* 내 작품 1등 만들기 */
+function hallNo1(){openModal(no1Shell());no1Render()}
+function no1Shell(){return `
+  <div class="modal-head"><h2>📈 내 작품 1등 만들기</h2><button class="x" onclick="closeModal()">✕</button></div>
+  <div class="modal-body">
+    <p style="font-size:13px;color:var(--ink-2);font-weight:600;margin-bottom:16px">유저들의 자발적 영업 지수로 '입소문 주가'가 실시간 결정돼요 <span style="color:var(--accent);font-weight:800">● 실시간</span></p>
+    <div id="no1List"></div>
+  </div>`;
+}
+function no1Render(){
+  const sorted=[...SALES].sort((a,b)=>b.v-a.v);
+  const max=sorted[0].v;
+  const cols=[['#e11551','#ff2e63'],['#5b21b6','#a855f7'],['#0e7490','#22d3ee'],['#0f766e','#10b981']];
+  document.getElementById('no1List').innerHTML=sorted.map((s,i)=>{const w=byId(s.id);return `
+    <div class="bar-row">
+      <div class="lab"><span>${i+1}. ${w.t}</span><span class="v">${s.v.toLocaleString()}</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${s.v/max*100}%;background:linear-gradient(90deg,${cols[i%4][0]},${cols[i%4][1]})"></div></div>
+      <button class="btn btn-line boost" style="width:100%;padding:9px" onclick="boost(${s.id})">${w.t} 영업하기 +100</button>
+    </div>`}).join('');
+}
+function boost(id){const s=SALES.find(x=>x.id===id);s.v+=100;no1Render();toast(`📣 ${byId(id).t} 영업 지수 +100!`)}
+
+/* 주접 태그 투표소 */
+function hallTagvote(){openModal(tvShell());tvRender()}
+function tvShell(){return `
+  <div class="modal-head"><h2>🏷️ 주접 태그 투표소</h2><button class="x" onclick="closeModal()">✕</button></div>
+  <div class="modal-body">
+    <p style="font-size:13px;color:var(--ink-2);font-weight:600;margin-bottom:14px">유저 UGC · 가장 와닿는 주접 태그에 투표하세요</p>
+    <div class="tv-input"><input id="tvInput" placeholder="#나만의_주접_태그" onkeydown="if(event.key==='Enter')tvAdd()"><button class="btn btn-blue" onclick="tvAdd()">등록</button></div>
+    <div id="tvList"></div>
+  </div>`;
+}
+function tvRender(){
+  const sorted=[...TAGS_VOTE].sort((a,b)=>b.v-a.v);
+  document.getElementById('tvList').innerHTML=sorted.map((t,i)=>`
+    <div class="tv-item"><span class="rank">${i+1}</span><span class="tg">${t.t}</span><span class="cnt">${t.v}</span>
+      <button class="up" onclick="tvUp('${t.t.replace(/'/g,"")}')">▲</button></div>`).join('');
+}
+function tvUp(tag){const t=TAGS_VOTE.find(x=>x.t.replace(/'/g,"")===tag);if(t){t.v++;tvRender()}}
+function tvAdd(){
+  const inp=document.getElementById('tvInput');let v=inp.value.trim();
+  if(!v){toast('태그를 입력해주세요');return}
+  if(!v.startsWith('#'))v='#'+v;
+  TAGS_VOTE.push({t:v,v:1});inp.value='';tvRender();toast('🏷️ 태그가 등록됐어요');
+}
+
+/* 오늘의 명장면 */
+function hallScene(){
+  const scenes=[['#7c3aed','무한열차, 그 새벽'],['#0a66ff','벽 너머의 바다'],['#10b981','화산으로 돌아온 날'],['#f59e0b','마지막 한 컷']];
+  openModal(`
+    <div class="modal-head"><h2>🎬 오늘의 명장면</h2><button class="x" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--ink-2);font-weight:600;margin-bottom:14px">유저 추천 · 마음에 드는 장면에 ♥</p>
+      <div class="scene-grid">
+        ${scenes.map(s=>`<div class="scene" style="background:linear-gradient(135deg,${s[0]},${s[0]}cc)">🖼️<span class="cap">${s[1]}</span></div>`).join('')}
+      </div>
+      <button class="btn btn-line" style="width:100%" onclick="toast('🎬 내 명장면을 업로드했어요')">+ 내 명장면 올리기</button>
+    </div>`);
+}
+
+/* 출석체크 */
+function hallAttend(){openModal(attShell());attRender()}
+function attShell(){return `
+  <div class="modal-head"><h2>📅 출석체크 이벤트</h2><button class="x" onclick="closeModal()">✕</button></div>
+  <div class="modal-body">
+    <p style="font-size:13px;color:var(--ink-2);font-weight:600">연속 출석 <b id="streakN" style="color:var(--accent)">${STATE.streak}</b>일째 · 7일 채우면 한정 배지 획득</p>
+    <div class="att-week" id="attWeek"></div>
+    <button class="btn btn-primary" style="width:100%" id="attBtn" onclick="checkIn()">오늘 출석체크</button>
+  </div>`;
+}
+function attRender(){
+  const days=['월','화','수','목','금','토','일'];
+  document.getElementById('attWeek').innerHTML=days.map((d,i)=>`
+    <div class="att-day ${STATE.attendance.has(i)?'done':''} ${i===STATE.streak&&!STATE.attendance.has(i)?'today':''}">
+      <span class="d">${d}</span><span class="n">${STATE.attendance.has(i)?'✓':'+10'}</span></div>`).join('');
+}
+function checkIn(){
+  if(STATE.attendance.has(STATE.streak)){toast('오늘은 이미 출석했어요');return}
+  STATE.attendance.add(STATE.streak);STATE.streak++;
+  document.getElementById('streakN').textContent=STATE.streak;
+  attRender();
+  if(STATE.streak>=7){toast('🏅 7일 개근! 한정 배지 획득');document.getElementById('attBtn').textContent='이번 주 개근 완료 🎉';document.getElementById('attBtn').disabled=true}
+  else toast(`✅ ${STATE.streak}일 연속 출석 · +10P`);
+}
+
+/* 신작 등수 맞추기 */
+let PRED=[];
+function hallPredict(){
+  PRED=[2,8,7,11].map(id=>byId(id));
+  openModal(predShell());predRender();
+}
+function predShell(){return `
+  <div class="modal-head"><h2>🔮 신작 등수 맞추기</h2><button class="x" onclick="closeModal()">✕</button></div>
+  <div class="modal-body">
+    <p style="font-size:13px;color:var(--ink-2);font-weight:600;margin-bottom:14px">이번 분기 신작이 실제로 몇 등 할지 순위를 예측해보세요</p>
+    <div id="predList"></div>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="predSubmit()">내 예측 제출하기</button>
+  </div>`;
+}
+function predRender(){
+  document.getElementById('predList').innerHTML=PRED.map((w,i)=>`
+    <div class="rk-item">
+      <span class="pos">${i+1}</span>
+      <div class="pp" style="background:${grad(w.genres[0])}"></div>
+      <span class="nm">${w.t}</span>
+      <div class="ar">
+        <button onclick="predMove(${i},-1)">▲</button>
+        <button onclick="predMove(${i},1)">▼</button>
+      </div>
+    </div>`).join('');
+}
+function predMove(i,dir){
+  const j=i+dir;if(j<0||j>=PRED.length)return;
+  [PRED[i],PRED[j]]=[PRED[j],PRED[i]];predRender();
+}
+function predSubmit(){toast('🔮 예측 제출 완료! 분기 마감 후 결과를 알려드려요');closeModal()}
+
+/* ============================================================
+   마이페이지
+============================================================ */
+function renderMypage(){
+  const v=document.getElementById('view');
+  const savedWorks=[...STATE.saved].map(byId);
+  const ratedCount=Object.keys(STATE.ratings).length;
+  const doneCount=statusCountAll('done');
+  const topGenre='무협';
+  v.innerHTML=`
+  <div class="mp-profile">
+    <div class="mp-av">${STATE.profile.name[0]}</div>
+    <div>
+      <div class="nm">${STATE.profile.name}${STATE.taste?` <span class="badge-pill" style="background:#0a66ff">취향 분석 완료</span>`:''}</div>
+      ${STATE.profile.bio?`<div style="font-size:13px;color:var(--ink-2);font-weight:600;margin-top:5px">${STATE.profile.bio}</div>`:''}
+      <div class="titles">${titlesHTML()}</div>
+      <button class="edit-prof" onclick="openProfileEdit()">✏️ 프로필 수정</button>
+    </div>
+    <div class="mp-stats">
+      <div class="mp-stat"><div class="n">${savedWorks.length}</div><div class="l">보고싶어요</div></div>
+      <div class="mp-stat"><div class="n">${ownedCount()}</div><div class="l">소장</div></div>
+      <div class="mp-stat"><div class="n">${doneCount}</div><div class="l">완주</div></div>
+      <div class="mp-stat"><div class="n">${ratedCount}</div><div class="l">평가</div></div>
+      <div class="mp-stat"><div class="n">${BADGES.filter(b=>badgeState(b).got).length}</div><div class="l">배지</div></div>
+    </div>
+  </div>
+
+  <div class="section" style="margin-bottom:26px">
+    <div style="display:flex;gap:9px;flex-wrap:wrap">
+      ${Object.entries(STATUS_META).map(([k,m])=>{const c=statusCountAll(k);return `<div class="chip" style="font-size:13px;padding:8px 14px"><b style="color:${m.c}">${m.e} ${c}</b>&nbsp;${m.l}</div>`}).join('')}
+      <div class="chip" style="font-size:13px;padding:8px 14px"><b style="color:var(--accent)">🔔 ${STATE.notify.size}</b>&nbsp;알림 중</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><h2>2026 나의 항해 일지</h2><span class="sub">공유하면 친구의 발견 입구가 돼요</span></div>
+    ${wrappedCardHTML()}
+    <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="openWrapped()">↗ 공유 카드 만들기</button>
+      <button class="btn btn-line" onclick="openTop3()">✏️ 인생작 탑3 편집</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><h2>내 소장관</h2><span class="sub">실제로 보고 있는 작품을 등록하고 상태로 관리</span></div>
+    <button class="btn btn-blue" style="margin-bottom:16px" onclick="openRegister()">+ 작품 등록하기</button>
+    ${ownedHTML()}
+  </div>
+
+  <div class="section">
+    <div class="section-head"><h2>작품 컬렉션 도감</h2><span class="sub">보고싶어요는 플랫폼 전체 · 정주행중·완료·보류·하차는 소장 작품만</span></div>
+    <div class="sfilter">
+      ${[['all','전체'],['saved','💗 보고싶어요'],['watch','▶ 정주행중'],['done','✓ 완료'],['hold','⏸ 보류'],['drop','✕ 하차']].map(([k,l])=>`<button class="${(STATE.mpFilter||'all')===k?'on':''}" onclick="setMpFilter('${k}')">${l}</button>`).join('')}
+    </div>
+    ${collectionHTML()}
+  </div>
+
+  <div class="section">
+    <div class="section-head"><h2>배지 & 칭호</h2><span class="sub">활동으로 모으는 컬렉션</span></div>
+    <div class="badge-tier-h">🥉 일반 배지 <span class="tg" style="background:var(--bg-soft2);color:var(--ink-2)">간단한 활동으로 수집</span></div>
+    <div class="badge-grid">${BADGES.filter(b=>b.tier==='easy').map(badgeCard).join('')}</div>
+    <div class="badge-tier-h" style="margin-top:24px">🥇 황금 배지 <span class="tg" style="background:#fef3c7;color:#b8860b">상위 1% 난이도 · 헤비 유저의 증표</span></div>
+    <div class="badge-grid">${BADGES.filter(b=>b.tier==='gold').map(badgeCard).join('')}</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><h2>월간 리포트</h2><span class="sub">2026년 나의 감상 기록</span></div>
+    <div id="mrBox">${monthlyReportHTML()}</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><h2>나의 연대기</h2></div>
+    <div class="card" style="padding:22px">
+      ${chronicleHTML()}
+    </div>
+  </div>`;
+}
+
+/* ============================================================
+   v2: 마이페이지 — 도감 필터 / Wrapped / 인생작 탑3
+============================================================ */
+function collectionHTML(){
+  const f=STATE.mpFilter||'all';
+  let cards=[];
+  if(f==='saved'){
+    const ws=WORKS.filter(w=>STATE.saved.has(w.id));
+    if(!ws.length) return emptyCol('보고싶어요에 담은 작품이 없어요','작품관에서 ‘+ 보고싶어요’를 눌러보세요','works');
+    cards=ws.map(posterCard);
+  } else if(f==='all'){
+    const ws=WORKS.filter(w=>STATE.saved.has(w.id)||STATE.status[w.id]);
+    cards=ws.map(posterCard).concat(STATE.customWorks.map(customPoster));
+    if(!cards.length) return emptyCol('아직 도감이 비어 있어요','보고싶어요를 담거나 소장 작품을 등록해보세요','works');
+  } else {
+    const cat=WORKS.filter(w=>STATE.status[w.id]===f).map(posterCard);
+    const cus=STATE.customWorks.filter(c=>c.status===f).map(customPoster);
+    cards=cat.concat(cus);
+    if(!cards.length) return emptyCol('이 상태의 소장 작품이 없어요','내 소장관에서 작품을 등록해보세요','none');
+  }
+  return `<div class="grid works">${cards.join('')}</div>`;
+}
+function emptyCol(t,s,dest){return `<div class="empty"><div class="e">📖</div><p>${t}<br>${s}</p>${dest!=='none'?`<button class="btn btn-primary" style="margin-top:14px" onclick="go('${dest}')">작품 보러가기</button>`:''}</div>`}
+function customPoster(c){
+  const cover=c.cover?`background-image:url('${c.cover}');background-size:cover;background-position:center`:`background:${grad(c.genre||'')}`;
+  const m=STATUS_META[c.status];
+  return `<div class="poster-card" onclick="toast('직접 등록한 작품 · 내 소장관에서 관리해요')">
+    <div class="poster" style="${cover}">
+      <span class="badge">직접 등록</span>
+      <span class="ptitle">${c.cover?'':c.title}</span>
+      ${m?`<span class="statustag" style="background:${m.c}">${m.e} ${m.l}</span>`:''}
+    </div>
+    <div class="meta"><div class="t">${c.title}</div><div class="r">${c.type||''}${c.genre?' · '+c.genre:''}</div></div>
+  </div>`;
+}
+function setMpFilter(k){STATE.mpFilter=k;renderMypage();}
+
+/* v3: 뱃지 카드(진행도 포함) */
+/* v3.1: 신규 유저 배경에 맞춘 동적 칭호/연대기/최애장르 */
+function topGenres(n){
+  const gc={};seenIds().forEach(id=>{const w=byId(id);if(w)w.genres.forEach(g=>gc[g]=(gc[g]||0)+1)});
+  return Object.entries(gc).sort((a,b)=>b[1]-a[1]).slice(0,n||3).map(e=>e[0]);
+}
+function titlesHTML(){
+  let chips='';
+  if(STATE.taste) chips+=`<span class="chip" style="color:var(--blue);background:#eef4ff">✨ ${STATE.taste.nickname}</span>`;
+  const earned=BADGES.filter(b=>badgeState(b).got);
+  if(earned.length) chips+=earned.slice(0,4).map(b=>`<span class="chip" style="color:${b.c};background:${b.c}1a">${b.ic} ${b.n}</span>`).join('');
+  else chips+=`<span class="chip" style="color:var(--ink-3);background:var(--bg-soft)">🌱 새내기 항해사</span>`;
+  return chips;
+}
+function chronicleHTML(){
+  const items=[];
+  const earned=BADGES.filter(b=>badgeState(b).got);
+  earned.forEach(b=>items.push([b.tier==='gold'?'황금 배지':'배지',`${b.ic} ‘${b.n}’ 배지를 획득했어요`]));
+  const done=statusCountAll('done'); if(done) items.push(['완주',`🏁 작품 ${done}편을 완주했어요`]);
+  const rated=Object.keys(STATE.ratings).length; if(rated) items.push(['평가',`⭐ 작품 ${rated}개를 평가했어요`]);
+  const saved=STATE.saved.size; if(saved) items.push(['수집',`💗 보고싶어요 ${saved}편을 담았어요`]);
+  if(STATE.myReviews) items.push(['활동',`✍️ 영업글 ${STATE.myReviews}개를 작성했어요`]);
+  if(STATE.taste) items.push(['취향',`🔮 취향 분석을 완료했어요`]);
+  const join=`<div class="chr-item"><div class="dt">합류</div><div class="tx">올블루에 합류해 항해를 시작했어요 ⚓</div></div>`;
+  if(!items.length){
+    return `<div class="chronicle"><div class="chr-item"><div class="dt">지금</div><div class="tx" style="color:var(--ink-3)">아직 기록이 없어요. 작품을 감상하고 평가하면 여기에 연대기가 쌓여요 🌊</div></div>${join}</div>`;
+  }
+  return `<div class="chronicle">${items.map(it=>`<div class="chr-item"><div class="dt">${it[0]}</div><div class="tx">${it[1]}</div></div>`).join('')}${join}</div>`;
+}
+
+function badgeCard(b){
+  const st=badgeState(b);const gold=b.tier==='gold';
+  return `<div class="badge-item ${gold?'gold':''} ${st.got?'got':''}">
+    ${gold?'<span class="goldtag">GOLD</span>':''}${st.got?'<span class="gotmark">✅</span>':''}
+    <div class="ic" style="background:${st.got?b.c:'var(--line-2)'}">${b.ic}</div>
+    <div class="bn">${b.n}</div>
+    <div class="bd">${b.d}</div>
+    ${st.got?'':`<div class="prog"><i style="width:${st.pct}%"></i></div><div class="pv">${st.cur.toLocaleString()} / ${st.need.toLocaleString()}</div>`}
+  </div>`;
+}
+
+/* v3: 월간 리포트 — 실제 감상 로그(STATE.viewLog) 기반, 클릭 시 작품 이동 */
+function reportStats(){
+  let total=0,eps=0;
+  Object.values(STATE.viewLog).forEach(arr=>arr.forEach(e=>{total++;eps+=e.ep}));
+  const months=new Set(Object.keys(STATE.viewLog).map(k=>k.split('-')[0])).size||1;
+  const rv=Object.values(STATE.ratings);
+  const avg=rv.length?rv.reduce((a,b)=>a+b,0)/rv.length:0;
+  return {total,eps,monthAvg:(total/months).toFixed(1),avg:avg?avg.toFixed(1):'-'};
+}
+function monthCount(mi){let n=0;Object.keys(STATE.viewLog).forEach(k=>{if(+k.split('-')[0]===mi)n+=STATE.viewLog[k].length});return n}
+function monthlyReportHTML(){
+  const st=reportStats();
+  const m=STATE.reportMonth;
+  const MN=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  const counts=[];for(let i=0;i<12;i++)counts.push(monthCount(i));
+  const maxM=Math.max(1,...counts);
+  const first=new Date(2026,m,1).getDay();
+  const dim=new Date(2026,m+1,0).getDate();
+  const dows=['일','월','화','수','목','금','토'];
+  let cells='';
+  for(let i=0;i<first;i++)cells+=`<div class="cal-cell empty"></div>`;
+  for(let d=1;d<=dim;d++){
+    const arr=STATE.viewLog[m+'-'+d];
+    if(arr&&arr.length){
+      const w=byId(arr[0].wid);
+      const click=arr.length>1?`openDayLog(${m},${d})`:`openDetail(${arr[0].wid})`;
+      cells+=`<div class="cal-cell has" style="background:${grad(w.genres[0])}" onclick="${click}" title="${w.t}${arr.length>1?` 외 ${arr.length-1}편`:''}"><span class="dn">${d}</span>${arr.length>1?`<span class="cnt">${arr.length}</span>`:''}</div>`;
+    } else cells+=`<div class="cal-cell">${d}</div>`;
+  }
+  const pct=Math.min(100,Math.round(st.total/200*100));
+  return `<div class="mr-wrap">
+    <div class="mr-profile">
+      <div class="av">${STATE.profile.name[0]}</div>
+      <div class="nm">${STATE.profile.name}</div>
+      <div class="id">@ollblue_user</div>
+      <div class="mr-ring" style="--p:${pct}"><div class="in"><div class="y">2026년</div><div class="n">${st.total}</div><div class="u">편</div></div></div>
+    </div>
+    <div class="mr-main">
+      <div class="mr-stats">
+        <div class="mr-stat"><div class="l">올해 본 작품</div><div class="v">${st.total}편</div></div>
+        <div class="mr-stat"><div class="l">월평균</div><div class="v">${st.monthAvg}편</div></div>
+        <div class="mr-stat"><div class="l">별점 평균</div><div class="v">${st.avg}점</div></div>
+        <div class="mr-stat"><div class="l">본 화수</div><div class="v">${st.eps.toLocaleString()}화</div></div>
+      </div>
+      <div class="mr-cal">
+        <div class="top"><button class="mr-nav" onclick="reportNav(-1)">‹</button> ${MN[m]} <button class="mr-nav" onclick="reportNav(1)">›</button></div>
+        <div class="cal-grid">${dows.map((d,i)=>`<div class="cal-h ${i===0?'sun':''}">${d}</div>`).join('')}${cells}</div>
+        <div style="text-align:center;font-size:11.5px;color:var(--ink-3);font-weight:600;margin-top:11px">📅 표지를 누르면 그 작품 상세로 이동 · 막대를 누르면 그 달로 이동</div>
+      </div>
+      <div class="mr-bars">
+        ${counts.map((v,i)=>`<div class="mr-bar ${i===m?'cur':''}" onclick="reportSetMonth(${i})"><div class="v">${v?v+'편':''}</div><div class="b" style="height:${v?Math.max(6,Math.round(v/maxM*100)):2}%"></div><div class="m">${i+1}월</div></div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+function refreshReport(){const b=document.getElementById('mrBox');if(b)b.innerHTML=monthlyReportHTML()}
+function reportNav(d){let m=STATE.reportMonth+d;m=Math.max(0,Math.min(11,m));STATE.reportMonth=m;refreshReport()}
+function reportSetMonth(m){STATE.reportMonth=m;refreshReport()}
+function openDayLog(m,d){
+  const arr=STATE.viewLog[m+'-'+d]||[];
+  openModal(`<div class="modal-head"><h2>${m+1}월 ${d}일 감상 기록</h2><button class="x" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--ink-2);font-weight:600;margin-bottom:12px">이 날 ${arr.length}편을 감상했어요. 작품을 누르면 상세로 이동해요.</p>
+      ${arr.map(e=>{const w=byId(e.wid);return `<div class="reco-mini" onclick="closeModal();openDetail(${w.id})"><div class="pp" style="background:${grad(w.genres[0])}"></div><div><div class="t">${w.t}</div><div class="s">${w.type} · ${e.ep}화 감상 · ★${w.rating}</div></div></div>`}).join('')}
+    </div>`);
+}
+
+/* ===== 소장 작품(catalog 상태 + 직접 등록) ===== */
+function ownedAll(){
+  const cat=WORKS.filter(w=>STATE.status[w.id]).map(w=>({key:'w'+w.id,wid:w.id,title:w.t,type:w.type,genre:w.genres[0],status:STATE.status[w.id],cover:null,custom:false}));
+  const cus=STATE.customWorks.map(c=>({key:c.key,wid:null,title:c.title,type:c.type,genre:c.genre,status:c.status,cover:c.cover,custom:true}));
+  return cat.concat(cus);
+}
+function ownedCount(){return ownedAll().length}
+function statusCountAll(st){return ownedAll().filter(o=>o.status===st).length}
+function ownedHTML(){
+  const list=ownedAll();
+  if(!list.length) return `<div class="empty"><div class="e">🗂️</div><p>아직 소장 작품이 없어요.<br>지금 보고 있는 작품을 등록해 정주행중·완료·보류·하차로 관리해보세요.</p></div>`;
+  return `<div class="owned-grid">${list.map(ownedCard).join('')}</div>`;
+}
+function ownedCard(o){
+  const cover=o.cover?`background-image:url('${o.cover}')`:`background:${grad(o.genre||'')}`;
+  return `<div class="own-card">
+    <div class="own-cover" style="${cover}">${(!o.custom)?o.type.split(' ')[0]:(o.cover?'':'🖼️')}</div>
+    <div class="own-info">
+      <div class="own-t">${o.title}</div>
+      <div class="own-g">${o.type||''}${o.genre?' · '+o.genre:''}${o.custom?' · 직접 등록':''}</div>
+      <div class="reg-status">
+        ${Object.entries(STATUS_META).map(([k,m])=>`<button class="${m.cls} ${o.status===k?'on':''}" onclick="setOwnedStatus('${o.key}','${k}')">${m.e} ${m.l}</button>`).join('')}
+      </div>
+    </div>
+    <button class="own-x" onclick="removeOwned('${o.key}')" title="소장 해제">✕</button>
+  </div>`;
+}
+function setOwnedStatus(key,k){
+  if(/^w\d+$/.test(key)){STATE.status[+key.slice(1)]=k;logView(+key.slice(1))}
+  else{const c=STATE.customWorks.find(x=>x.key===key);if(c)c.status=k}
+  renderMypage();toast(`‘${STATUS_META[k].l}’(으)로 변경했어요`);
+}
+function removeOwned(key){
+  if(/^w\d+$/.test(key)){delete STATE.status[+key.slice(1)]}
+  else{STATE.customWorks=STATE.customWorks.filter(x=>x.key!==key)}
+  renderMypage();toast('소장 목록에서 뺐어요');
+}
+
+/* ===== 작품 등록 모달 (검색 / 직접 추가) ===== */
+let REG={mode:'search',cover:null,custom:{title:'',type:'웹툰',genre:'로맨스',status:'watch'}};
+function openRegister(){
+  REG={mode:'search',cover:null,custom:{title:'',type:'웹툰',genre:'로맨스',status:'watch'}};
+  openModal(`<div class="modal-head"><h2>작품 등록</h2><button class="x" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="reg-tabs">
+        <button id="rtSearch" onclick="regMode('search')">🔍 플랫폼에서 검색</button>
+        <button id="rtCustom" onclick="regMode('custom')">📷 직접 추가</button>
+      </div>
+      <div id="regBody"></div>
+    </div>`);
+  regRender();
+}
+function regMode(m){REG.mode=m;regRender()}
+function regRender(){
+  const ts=document.getElementById('rtSearch'),tc=document.getElementById('rtCustom');
+  if(ts)ts.classList.toggle('on',REG.mode==='search');
+  if(tc)tc.classList.toggle('on',REG.mode==='custom');
+  document.getElementById('regBody').innerHTML=REG.mode==='search'?regSearchHTML():regCustomHTML();
+  if(REG.mode==='search'){const i=document.getElementById('regQ');if(i)i.focus()}
+}
+function regSearchHTML(){
+  return `<input class="reg-inp" id="regQ" placeholder="작품명·장르 검색 (예: 무협, 로맨스)" oninput="regSearch(this.value)">
+    <div style="font-size:12px;color:var(--ink-3);font-weight:600;margin:2px 0 8px">플랫폼에 있는 작품을 검색해 상태와 함께 등록해요</div>
+    <div id="regResults">${regResultsHTML('')}</div>`;
+}
+function regResultsHTML(q){
+  q=(q||'').trim().toLowerCase();
+  let list=q?WORKS.filter(w=>(w.t+w.genres.join()+w.tags.join()+w.type).toLowerCase().includes(q)):WORKS;
+  if(!list.length) return `<div style="padding:22px;text-align:center;color:var(--ink-3);font-weight:600;font-size:13px">검색 결과가 없어요.<br>‘📷 직접 추가’로 등록해보세요.</div>`;
+  return list.map(w=>{const cur=STATE.status[w.id];return `<div class="reg-row">
+    <div class="pp" style="background:${grad(w.genres[0])}"></div>
+    <div style="flex:1;min-width:0">
+      <div class="t">${w.t}</div>
+      <div class="g">${w.type} · ${w.genres.join('·')} · ★${w.rating}</div>
+      <div class="reg-status">
+        ${Object.entries(STATUS_META).map(([k,m])=>`<button class="${m.cls} ${cur===k?'on':''}" onclick="regAddCatalog(${w.id},'${k}')">${m.e} ${m.l}</button>`).join('')}
+      </div>
+    </div>
+    ${cur?`<span class="reg-done">✓ 소장중</span>`:''}
+  </div>`}).join('');
+}
+function regSearch(q){const r=document.getElementById('regResults');if(r)r.innerHTML=regResultsHTML(q)}
+function regAddCatalog(id,k){
+  STATE.status[id]=k;logView(id);
+  const q=document.getElementById('regQ');
+  document.getElementById('regResults').innerHTML=regResultsHTML(q?q.value:'');
+  renderMypage();
+  toast(`‘${byId(id).t}’ ${STATUS_META[k].l}(으)로 소장 등록`);
+}
+function regCustomHTML(){
+  const c=REG.custom;
+  const genres=['로맨스','다크판타지','무협','액션','판타지','일상','스릴러','코미디','회귀','먼치킨','드라마','기타'];
+  return `<div class="reg-custom">
+    <label class="reg-photo" for="regPhoto">${REG.cover?`<img src="${REG.cover}">`:`<span class="ph">📷<br>사진 추가</span>`}</label>
+    <input type="file" id="regPhoto" accept="image/*" style="display:none" onchange="regPhoto(this)">
+    <div style="flex:1;min-width:0">
+      <input class="reg-inp" id="rcTitle" placeholder="작품명" maxlength="30" value="${c.title.replace(/"/g,'&quot;')}" oninput="REG.custom.title=this.value">
+      <select class="reg-inp" onchange="REG.custom.type=this.value">${['웹툰','애니','만화','웹소설','기타'].map(t=>`<option ${c.type===t?'selected':''}>${t}</option>`).join('')}</select>
+      <select class="reg-inp" style="margin-bottom:0" onchange="REG.custom.genre=this.value">${genres.map(g=>`<option ${c.genre===g?'selected':''}>${g}</option>`).join('')}</select>
+    </div>
+  </div>
+  <div style="font-size:12px;color:var(--ink-3);font-weight:600;margin:4px 0 2px">플랫폼에 없는 작품은 직접 정보를 입력해 소장 등록해요</div>
+  <span class="pe-lab">시청 상태</span>
+  <div class="reg-status">${Object.entries(STATUS_META).map(([k,m])=>`<button class="${m.cls} ${c.status===k?'on':''}" onclick="REG.custom.status='${k}';regRender()">${m.e} ${m.l}</button>`).join('')}</div>
+  <button class="btn btn-primary" style="width:100%;margin-top:16px" onclick="regCustomSubmit()">소장 등록</button>`;
+}
+function regPhoto(input){const f=input.files&&input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{REG.cover=e.target.result;regRender()};r.readAsDataURL(f)}
+function regCustomSubmit(){
+  const c=REG.custom;
+  if(!c.title.trim()){toast('작품명을 입력해주세요');return}
+  STATE.customWorks.push({key:'c'+Date.now(),title:c.title.trim(),type:c.type,genre:c.genre,status:c.status,cover:REG.cover});
+  renderMypage();closeModal();toast(`‘${c.title.trim()}’을(를) 소장 등록했어요`);
+}
+
+/* ===== 프로필 수정 ===== */
+function refreshAvatar(){const a=document.getElementById('topAv');if(a)a.textContent=STATE.profile.name[0]||'?'}
+function openProfileEdit(){
+  openModal(`<div class="modal-head"><h2>프로필 수정</h2><button class="x" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">
+      <div style="display:flex;justify-content:center;margin-bottom:18px"><div class="mp-av" id="peAv" style="width:64px;height:64px;font-size:24px">${STATE.profile.name[0]||'?'}</div></div>
+      <span class="pe-lab">이름</span>
+      <input class="reg-inp" id="peName" maxlength="16" value="${STATE.profile.name.replace(/"/g,'&quot;')}" oninput="var a=document.getElementById('peAv');if(a)a.textContent=(this.value[0]||'?')">
+      <span class="pe-lab">한 줄 소개</span>
+      <input class="reg-inp" id="peBio" maxlength="40" placeholder="나를 한 줄로 소개해보세요" value="${(STATE.profile.bio||'').replace(/"/g,'&quot;')}">
+      <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="saveProfile()">저장</button>
+    </div>`);
+}
+function saveProfile(){
+  const n=document.getElementById('peName').value.trim();
+  if(!n){toast('이름을 입력해주세요');return}
+  STATE.profile.name=n;STATE.profile.bio=document.getElementById('peBio').value.trim();
+  refreshAvatar();refreshAcct();saveAccount();closeModal();renderMypage();toast('프로필을 저장했어요');
+}
+
+function wrappedCardHTML(){
+  const top3=STATE.top3.map(byId).filter(Boolean);
+  const saved=STATE.saved.size, rated=Object.keys(STATE.ratings).length;
+  const done=statusCountAll('done');
+  const fav=topGenres(1)[0]||'—';
+  const earned=BADGES.filter(b=>badgeState(b).got);
+  const foot=earned.length?earned.slice(0,3).map(b=>`${b.ic} ${b.n}`).join(' · ')+' · 0LLBLUE에서 발견 중':'⚓ 0LLBLUE에서 항해 시작';
+  return `<div class="wrap-card">
+    <div class="wh">⚓ 0LLBLUE WRAPPED · 2026</div>
+    <h2>${STATE.profile.name}님의 인생작 탑3</h2>
+    <div class="wrap-top3">
+      ${top3.length?top3.map((w,i)=>`<div class="wt"><div class="pp" style="background:${grad(w.genres[0])}">${w.t}</div><div class="rk">${['🥇','🥈','🥉'][i]} ${w.t}</div></div>`).join('')
+        :`<div class="wt" style="color:#cfe1ff;font-size:13px;font-weight:600">인생작 탑3을 골라보세요 ↓</div>`}
+    </div>
+    <div class="wrap-stats">
+      <div class="ws"><div class="n">${saved}</div><div class="l">담은 작품</div></div>
+      <div class="ws"><div class="n">${rated}</div><div class="l">남긴 평가</div></div>
+      <div class="ws"><div class="n">${done}</div><div class="l">완주 작품</div></div>
+      <div class="ws"><div class="n">${fav}</div><div class="l">최애 장르</div></div>
+    </div>
+    <div class="wrap-foot">${foot}</div>
+  </div>`;
+}
+function openWrapped(){
+  openModal(`<div class="modal-head"><h2>↗ 공유 카드</h2><button class="x" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">${wrappedCardHTML()}
+    <div style="display:flex;gap:9px;margin-top:16px">
+      <button class="btn btn-primary" style="flex:1" onclick="toast('🖼️ 이미지로 저장했어요 (데모)')">이미지 저장</button>
+      <button class="btn btn-line" style="flex:1" onclick="toast('🔗 공유 링크를 복사했어요')">링크 복사</button>
+    </div>
+    <p style="font-size:12.5px;color:var(--ink-3);font-weight:600;margin-top:13px;text-align:center;line-height:1.5">이 카드 속 작품을 누른 친구는 바로 작품관으로 들어와요<br>→ 기록의 결과물이 곧 남의 발견 입구 (북스타 유입 루프)</p></div>`);
+}
+function t3pickHTML(){
+  return WORKS.map(w=>{const idx=STATE.top3.indexOf(w.id);return `<div class="opt ${idx>=0?'sel':''}" onclick="t3toggle(${w.id})"><div class="img" style="background:${grad(w.genres[0])}">${w.t}</div><span class="ord">${idx>=0?idx+1:''}</span></div>`}).join('');
+}
+function openTop3(){
+  openModal(`<div class="modal-head"><h2>✏️ 인생작 탑3</h2><button class="x" onclick="closeModal()">✕</button></div>
+    <div class="modal-body"><p style="font-size:13px;color:var(--ink-2);font-weight:600;margin-bottom:14px">최대 3개까지 순서대로 골라주세요 (PDF의 ‘인생 애니 탑3 설정’)</p>
+    <div class="t3-pick" id="t3pick">${t3pickHTML()}</div>
+    <button class="btn btn-primary" style="width:100%;margin-top:16px" onclick="closeModal();renderMypage();toast('🥇 인생작 탑3을 저장했어요')">저장</button></div>`);
+}
+function t3toggle(id){
+  const i=STATE.top3.indexOf(id);
+  if(i>=0){STATE.top3.splice(i,1)}else{if(STATE.top3.length>=3){toast('탑3까지만 고를 수 있어요');return}STATE.top3.push(id)}
+  const pick=document.getElementById('t3pick');if(pick)pick.innerHTML=t3pickHTML();
+}
+
+/* ============================================================
+   취향분석 온보딩 (FLYBOOK AI 레퍼런스 → 웹툰·애니 적응)
+============================================================ */
+const NICK_ADJ=['심야의','정주행하는','다크한','설렘 가득','떡밥 수집','회귀한','최애 부자','조용한','광기의','감성','입문 환영','밤샘'];
+const NICK_NOUN=['다크판타지 항해사','로맨스 큐레이터','무협 고수','애니 덕후','웹툰 발굴러','명작 사냥꾼','감성 항해사','장르 유목민','정주행 마스터','입문 길잡이'];
+function randomNick(){return NICK_ADJ[Math.floor(Math.random()*NICK_ADJ.length)]+' '+NICK_NOUN[Math.floor(Math.random()*NICK_NOUN.length)]}
+
+/* 콘텐츠 타입별 끌리는 장르 (애니는 애니 전용 장르) */
+const GENRE_OPTS={
+  '애니':[
+    {e:'💪',l:'먼치킨'},{e:'👯',l:'하렘'},{e:'🌌',l:'이세계'},{e:'⏪',l:'회귀'},{e:'🏫',l:'학원'},
+    {e:'🌑',l:'다크판타지'},{e:'💥',l:'액션'},{e:'💕',l:'로맨스'},{e:'😂',l:'코미디'},{e:'☕',l:'일상'},{e:'🔪',l:'스릴러'},
+  ],
+  '웹툰':[
+    {e:'🗡️',l:'무협'},{e:'⏪',l:'회귀'},{e:'💪',l:'먼치킨'},{e:'💕',l:'로맨스'},{e:'👑',l:'로판'},
+    {e:'🧙',l:'판타지'},{e:'🌑',l:'다크판타지'},{e:'💥',l:'액션'},{e:'🎭',l:'드라마'},{e:'☕',l:'일상'},
+  ],
+  'all':[
+    {e:'🌑',l:'다크판타지'},{e:'💕',l:'로맨스'},{e:'🗡️',l:'무협'},{e:'💥',l:'액션'},{e:'🧙',l:'판타지'},
+    {e:'⏪',l:'회귀'},{e:'💪',l:'먼치킨'},{e:'🌌',l:'이세계'},{e:'🏫',l:'학원'},{e:'☕',l:'일상'},{e:'🔪',l:'스릴러'},{e:'😂',l:'코미디'},
+  ],
+};
+/* 장르 라벨 → 실제 데이터의 장르/태그로 매핑 (애니 전용 장르 포함) */
+const GENRE_MAP={
+  '다크판타지':{g:['다크판타지']},'로맨스':{g:['로맨스']},'무협':{g:['무협']},'액션':{g:['액션']},
+  '판타지':{g:['판타지']},'일상':{g:['일상']},'스릴러':{g:['스릴러']},'코미디':{g:['코미디']},
+  '회귀':{g:['회귀']},'먼치킨':{g:['먼치킨']},'드라마':{g:['드라마']},
+  '로판':{g:['로맨스'],t:['로판','감정선']},
+  '하렘':{g:['로맨스','코미디'],t:['힐링']},
+  '이세계':{g:['판타지','먼치킨'],t:['헌터','글로벌인기']},
+  '학원':{g:['일상','코미디'],t:['성장','성장물']},
+};
+
+const TASTE_STEPS=[
+  {t:'intro'},
+  {t:'nickname'},
+  {t:'multi',key:'pain',q:'새 작품 찾기, 뭐가 제일 어려웠어요?',sub:'해당하는 걸 모두 골라주세요',opts:[
+    {e:'⏳',l:'뭘 볼지 고르다 시간 다 가요',v:'overwhelm'},
+    {e:'😵',l:'다 비슷해 보여서 못 고르겠어요',v:'samey'},
+    {e:'💸',l:'광고·평점만 믿었다 실패했어요',v:'fail'},
+    {e:'🤖',l:'추천이 내 취향이랑 안 맞아요',v:'mismatch'},
+    {e:'🧗',l:'어디서 시작할지 막막해요',v:'start'},
+    {e:'📺',l:'내가 보는 플랫폼에 있는지 모르겠어요',v:'platform'},
+    {e:'⏱️',l:'회차·러닝타임 긴 작품은 부담돼요',v:'long'},
+    {e:'🙈',l:'너무 유명한 것만 따라가긴 싫어요',v:'niche'},
+    {e:'⏸️',l:'완결까지 기다리는 게 답답해요',v:'ongoing'},
+  ]},
+  {t:'single',key:'why',q:'그래도 지금 새 작품을 찾는 이유는?',opts:[
+    {e:'🛋️',l:'각 잡고 정주행하고 싶어서'},
+    {e:'💖',l:'인생작을 만나고 싶어서'},
+    {e:'👀',l:'남들 다 보는 거 나도 보려고'},
+    {e:'⌛',l:'시간 때우기 좋은 거 찾아서'},
+    {e:'🔥',l:'덕질할 새 최애가 필요해서'},
+  ]},
+  {t:'interstitial'},
+  {t:'single',key:'ctype',q:'주로 어떤 걸 보세요?',opts:[
+    {e:'📱',l:'웹툰 위주',v:'웹툰'},{e:'📺',l:'애니 위주',v:'애니'},{e:'🌊',l:'둘 다 골고루',v:'all'},
+  ]},
+  {t:'tile',key:'age',q:'나이대를 알려주세요',opts:[
+    {e:'🌱',l:'10대'},{e:'✨',l:'20대'},{e:'💎',l:'30대'},{e:'🔥',l:'40대+'},{e:'🤫',l:'비밀'},
+  ]},
+  {t:'tile',key:'gender',q:'성별을 알려주세요',sub:'선택은 자유예요',opts:[
+    {e:'🙋‍♀️',l:'여성'},{e:'🙋‍♂️',l:'남성'},{e:'🙂',l:'선택 안 함'},
+  ]},
+  {t:'tile',key:'mood',multi:true,q:'요즘 기분은 어떤가요?',sub:'끌리는 걸 모두 골라주세요',opts:[
+    {e:'😭',l:'울고 싶어',v:'cry'},{e:'😆',l:'신나는 거',v:'fun'},{e:'🫧',l:'머리 비우기',v:'empty'},{e:'🔥',l:'가슴 웅장',v:'epic'},
+    {e:'💗',l:'설레고 싶어',v:'flutter'},{e:'😱',l:'소름 돋게',v:'thrill'},{e:'🌿',l:'힐링 필요',v:'heal'},{e:'⚡',l:'자극 필요',v:'stim'},
+  ]},
+  {t:'tile',key:'genre',multi:true,q:'끌리는 장르는?',sub:'여러 개 선택 가능',opts:[]},
+  {t:'single',key:'tone',q:'어떤 전개를 좋아해요?',opts:[
+    {e:'🥤',l:'사이다·먼치킨'},{e:'🌧️',l:'잔잔한 감정선'},{e:'🧩',l:'떡밥·반전'},{e:'🎨',l:'작화·연출 甲'},{e:'🌱',l:'입문하기 쉬운'},
+  ]},
+  {t:'single',key:'pace',q:'하루에 얼마나 보고 싶어요?',opts:[
+    {e:'🍃',l:'가볍게 한두 편'},{e:'🌀',l:'몰아서 정주행'},{e:'🏁',l:'완결작 한 번에'},{e:'🎲',l:'그냥 끌리는 대로'},
+  ]},
+  {t:'analyzing'},
+  {t:'result'},
+];
+
+let ONB=null;
+let PREF={g:new Set(),t:new Set()};
+function resetTaste(){
+  ONB={step:0,results:[],ans:{pain:[],why:null,ctype:null,age:null,gender:null,mood:[],genre:[],tone:null,pace:null,nickname:randomNick()}};
+}
+function tasteNext(){ONB.step++;renderTaste()}
+function tasteBack(){if(ONB.step>0){ONB.step--;renderTaste()}}
+function tasteToggle(key,val){const a=ONB.ans[key];const i=a.indexOf(val);if(i>=0)a.splice(i,1);else a.push(val);renderTaste()}
+function tasteSet(key,val){
+  ONB.ans[key]=(ONB.ans[key]===val?null:val);
+  if(key==='ctype') ONB.ans.genre=[]; // 타입 바꾸면 장르 보기가 달라지므로 초기화
+  renderTaste();
+  if(ONB.ans[key]!==null)setTimeout(()=>{ONB.step++;renderTaste()},280);
+}
+function rerollNick(){ONB.ans.nickname=randomNick();const i=document.getElementById('nickInput');if(i)i.value=ONB.ans.nickname}
+
+function tasteNav(showNext,nextLabel){
+  return `<div class="onb-nav">${ONB.step>0?`<button class="onb-back btn btn-ghost" onclick="tasteBack()">←</button>`:''}${showNext?`<button class="btn btn-primary" onclick="tasteNext()">${nextLabel||'다음'}</button>`:''}</div>`;
+}
+
+function renderTaste(){
+  if(!ONB) resetTaste();
+  const s=TASTE_STEPS[ONB.step];
+  const v=document.getElementById('view');
+  const nick=ONB.ans.nickname||'당신';
+  let body='';
+
+  if(s.t==='intro'){
+    body=`<div class="onb-mascot"><span class="eye"></span><span class="eye"></span></div>
+      <div class="onb-title">반가워요! 🌊</div>
+      <div class="onb-sub">3분이면 끝나요.<br>몇 가지만 답하면 취향에 딱 맞는<br>웹툰·애니를 골라드릴게요.</div>
+      <div class="onb-nav"><button class="btn btn-primary" onclick="tasteNext()">네, 좋아요</button></div>`;
+  }
+  else if(s.t==='nickname'){
+    body=`<div class="onb-q">당신을 뭐라고 불러드릴까요?</div>
+      <div class="onb-qsub">마음에 드는 닉네임으로 시작해보세요 (나중에 변경 가능)</div>
+      <div class="onb-nick"><input id="nickInput" maxlength="20" value="${ONB.ans.nickname}" oninput="ONB.ans.nickname=this.value"><button class="reroll" onclick="rerollNick()" title="새로 추천">🎲</button></div>
+      ${tasteNav(true)}`;
+  }
+  else if(s.t==='interstitial'){
+    body=`<div class="onb-mascot"><span class="eye"></span><span class="eye"></span></div>
+      <div class="onb-title">좋아요! 👏</div>
+      <div class="onb-sub">이제부터 본격적으로<br><b style="color:var(--ink)">${nick}</b>님의 취향을 분석해볼게요.</div>
+      <div class="onb-nav"><button class="btn btn-primary" onclick="tasteNext()">계속하기</button></div>`;
+  }
+  else if(s.t==='analyzing'){
+    body=`<div class="onb-mascot"><span class="eye"></span><span class="eye"></span></div>
+      <div class="onb-title">취향을 분석하고 있어요</div>
+      <div class="onb-sub">${nick}님께 어울리는 작품을 고르는 중...</div>
+      <div class="onb-spin"></div>`;
+  }
+  else if(s.t==='result'){
+    const top=ONB.results.map(byId);
+    body=`<div class="onb-q" style="text-align:center">${nick}님께 어울리는<br>작품을 찾았어요! 🎉</div>
+      <div class="onb-qsub" style="text-align:center">이런 작품으로 시작해볼까요?</div>
+      <div class="onb-result-cards">
+        ${top.map(w=>`<div class="onb-rc" onclick="tasteStart(${w.id})">
+          <div class="pp" style="background:${grad(w.genres[0])}">${w.type.split(' ')[0]}</div>
+          <div style="flex:1;min-width:0"><div class="t">${w.t}</div><div class="g">${w.type} · ${w.genres.join('·')} · ★${w.rating}</div><div class="why">🧭 ${whyText(w,ONB.ans)}</div></div>
+          <div class="go">›</div></div>`).join('')}
+      </div>
+      <div class="onb-nav"><button class="btn btn-ghost" onclick="resetTaste();renderTaste()">다시 분석</button><button class="btn btn-line" onclick="applyTaste();go('works')">작품관에서 더 보기</button></div>`;
+  }
+  else if(s.t==='multi'){
+    body=`<div class="onb-q">${s.q}</div><div class="onb-qsub">${s.sub||''}</div>
+      <div class="onb-opts">
+        ${s.opts.map(o=>{const val=o.v||o.l;const sel=ONB.ans[s.key].includes(val);return `<button class="onb-opt ${sel?'sel':''}" onclick="tasteToggle('${s.key}','${val}')"><span class="e">${o.e}</span>${o.l}<span class="ck">${sel?'✓':''}</span></button>`}).join('')}
+      </div>${tasteNav(true)}`;
+  }
+  else if(s.t==='single'){
+    body=`<div class="onb-q">${s.q}</div><div class="onb-qsub">${s.sub||''}</div>
+      <div class="onb-opts">
+        ${s.opts.map(o=>{const val=o.v||o.l;const sel=ONB.ans[s.key]===val;return `<button class="onb-opt ${sel?'sel':''}" onclick="tasteSet('${s.key}','${val}')"><span class="e">${o.e}</span>${o.l}<span class="ck">${sel?'✓':''}</span></button>`}).join('')}
+      </div>${tasteNav(false)}`;
+  }
+  else if(s.t==='tile'){
+    const opts = s.key==='genre' ? (GENRE_OPTS[ONB.ans.ctype]||GENRE_OPTS.all) : s.opts;
+    const sub = s.key==='genre'
+      ? (ONB.ans.ctype==='애니'?'애니에서 인기 있는 장르들이에요':ONB.ans.ctype==='웹툰'?'웹툰에서 인기 있는 장르들이에요':'여러 개 선택 가능')
+      : (s.sub||'');
+    body=`<div class="onb-q">${s.q}</div><div class="onb-qsub">${sub}</div>
+      <div class="onb-grid">
+        ${opts.map(o=>{const val=o.v||o.l;const sel=s.multi?ONB.ans[s.key].includes(val):ONB.ans[s.key]===val;return `<div class="onb-tile ${sel?'sel':''}" onclick="${s.multi?`tasteToggle('${s.key}','${val}')`:`tasteSet('${s.key}','${val}')`}"><span class="e">${o.e}</span>${o.l}</div>`}).join('')}
+      </div>${tasteNav(!!s.multi)}`;
+  }
+
+  v.innerHTML=`<div class="onb-progress"><i style="width:${Math.round(ONB.step/(TASTE_STEPS.length-1)*100)}%"></i></div><div class="onb-wrap"><div class="onb-card">${body}</div></div>`;
+
+  if(s.t==='analyzing'){
+    setTimeout(()=>{ONB.results=recommend(ONB.ans);ONB.step++;renderTaste()},1900);
+  }
+}
+
+/* 추천 엔진: 설문 답변 → 선호 장르·태그로 점수화 */
+function recommend(ans){
+  const moodMap={
+    cry:{g:['로맨스','드라마'],t:['감동','감정선']}, fun:{g:['액션','코미디'],t:['사이다','웃김']},
+    empty:{g:['일상','코미디'],t:['힐링','입문추천']}, epic:{g:['다크판타지','판타지'],t:['명작','성장물']},
+    flutter:{g:['로맨스'],t:['로판','감정선']}, thrill:{g:['스릴러','다크판타지'],t:['반전미친','떡밥']},
+    heal:{g:['일상','로맨스'],t:['힐링','잔잔']}, stim:{g:['액션','무협'],t:['광기','중독성']},
+  };
+  const toneMap={'사이다·먼치킨':['사이다','먼치킨'],'잔잔한 감정선':['감정선','잔잔','로판'],'떡밥·반전':['떡밥','반전미친','메타'],'작화·연출 甲':['작화미친','연출'],'입문하기 쉬운':['입문추천']};
+  PREF={g:new Set(),t:new Set()};
+  (ans.genre||[]).forEach(lbl=>{const m=GENRE_MAP[lbl];if(m){(m.g||[]).forEach(g=>PREF.g.add(g));(m.t||[]).forEach(t=>PREF.t.add(t))}else PREF.g.add(lbl)});
+  ans.mood.forEach(m=>{const mm=moodMap[m];if(mm){mm.g.forEach(g=>PREF.g.add(g));mm.t.forEach(t=>PREF.t.add(t))}});
+  if(ans.tone&&toneMap[ans.tone])toneMap[ans.tone].forEach(t=>PREF.t.add(t));
+  const pain=ans.pain||[];
+  const scored=WORKS.map(w=>{
+    let sc=w.rating*0.3;
+    w.genres.forEach(g=>{if(PREF.g.has(g))sc+=3});
+    w.tags.forEach(t=>{if(PREF.t.has(t))sc+=2});
+    if(ans.ctype&&ans.ctype!=='all'){sc+=w.type.includes(ans.ctype)?2:-4}
+    if(ans.pace==='완결작 한 번에'&&w.status==='완결')sc+=2;
+    if(ans.pace==='몰아서 정주행'&&w.hours>=20)sc+=1.5;
+    if(ans.pace==='가볍게 한두 편'&&w.hours<=12)sc+=1.5;
+    if(ans.why==='인생작을 만나고 싶어서')sc+=(w.rating-4)*2;
+    // 어려웠던 점(페인포인트)을 발견 기준으로 반영
+    if(pain.includes('start')){if(w.tags.includes('입문추천'))sc+=2.5;sc+=(w.comp-85)*0.05}
+    if(pain.includes('fail')){sc+=(w.comp-85)*0.08;if(w.rating>=4.7)sc+=1}        // 실패 회피 → 검증된 고완주작
+    if(pain.includes('platform')){if((w.plat||[]).length>=2)sc+=1.5}              // 여러 플랫폼에서 볼 수 있는 작품
+    if(pain.includes('long')){if(w.hours<=10)sc+=2.5;else if(w.hours>=24)sc-=3;else if(w.hours>=18)sc-=1}
+    if(pain.includes('niche')){if(w.tags.includes('숨은명작'))sc+=3;if(w.count<5000)sc+=2;else if(w.count>15000)sc-=1.5}
+    if(pain.includes('ongoing')){sc+=(w.status==='완결'?2:-2.5)}                  // 완결작 선호
+    if(pain.includes('samey')){if(w.count<7000)sc+=1}                             // 뻔하지 않은 작품
+    return {w,sc};
+  });
+  scored.sort((a,b)=>b.sc-a.sc);
+  return scored.slice(0,3).map(x=>x.w.id);
+}
+function whyText(w,ans){
+  ans=ans||{};const pain=ans.pain||[];
+  if(pain.includes('niche')&&(w.tags.includes('숨은명작')||w.count<5000)) return '아직 덜 알려진 숨은 명작';
+  if(pain.includes('long')&&w.hours<=10) return `예상 완주 ${w.hours}시간 · 부담 없어요`;
+  if(pain.includes('fail')&&w.comp>=90) return `완주율 ${w.comp}% · 실패 걱정 적어요`;
+  const gm=w.genres.find(g=>PREF.g.has(g));
+  if(gm) return `#${gm} 취향에 딱 맞아요`;
+  const tm=w.tags.find(t=>PREF.t.has(t));
+  if(tm) return `#${tm} 요소가 강한 작품`;
+  if(pain.includes('start')&&w.tags.includes('입문추천')) return '입문하기 좋은 작품';
+  return `★${w.rating} · 많은 유저가 만족한 작품`;
+}
+function applyTaste(){
+  if(ONB&&ONB.ans) STATE.taste={nickname:ONB.ans.nickname,genres:[...ONB.ans.genre]};
+}
+/* 결과 카드 클릭 → 독서(정주행) 1일차 → 상세로 이동 */
+function tasteStart(id){
+  applyTaste();
+  STATE.status[id]='watch';logView(id);
+  const w=byId(id);
+  const v=document.getElementById('view');
+  v.innerHTML=`<div class="onb-wrap"><div class="onb-card" style="text-align:center">
+    <div class="onb-rc" style="cursor:default;border:none;justify-content:center;background:transparent;padding:0;margin-bottom:18px">
+      <div class="pp" style="width:84px;height:114px;background:${grad(w.genres[0])}">${w.t}</div>
+    </div>
+    <div class="onb-title">오늘이 덕질 1일차! 🎉</div>
+    <div class="onb-sub">이미 절반은 성공이에요.<br><b style="color:var(--ink)">${w.t}</b> 정주행을 시작해볼까요?</div>
+    <div class="onb-nav"><button class="btn btn-primary" onclick="openDetail(${id})">지금 정주행 시작하기</button></div>
+    <button class="btn btn-ghost" style="width:100%;margin-top:10px" onclick="ONB.step=${TASTE_STEPS.length-1};renderTaste()">← 추천 다시 보기</button>
+  </div></div>`;
+}
+
+/* ============================================================
+   부팅
+============================================================ */
+/* 데모 계정(soya)용 마이페이지 데이터 — 이 데이터는 soya 계정에만 들어감 */
+function demoData(){
+  const counts=[32,27,27,26,26,21],ids=WORKS.map(w=>w.id),vl={};
+  let s=20260601;const rnd=()=>{s=(s*1103515245+12345)&0x7fffffff;return s/0x7fffffff};
+  counts.forEach((cnt,mi)=>{const dim=new Date(2026,mi+1,0).getDate();
+    for(let i=0;i<cnt;i++){const day=1+Math.floor(rnd()*dim);const wid=ids[Math.floor(rnd()*ids.length)];const ep=3+Math.floor(rnd()*10);
+      (vl[mi+'-'+day]=vl[mi+'-'+day]||[]).push({wid,ep})}});
+  return {
+    saved:[1,3,5,10],
+    ratings:{1:5,2:4,3:5,5:5,7:4,10:5,12:4},
+    status:{1:'done',3:'done',5:'done',10:'done',2:'watch',8:'hold'},
+    progress:{1:2},notify:[],followCreators:['ufotable'],top3:[1,3,5],customWorks:[],
+    seriesProgress:['0-0','0-1'],myReviews:2,viewLog:vl,
+    profile:{name:'소연',bio:'웹툰·애니 발견을 즐기는 항해사'},
+    attendance:[0,1,2],streak:3,taste:null,following:['민지','성욱']
+  };
+}
+
+/* ============================================================
+   계정 / 인증 (localStorage 영구 저장 · 불가 시 메모리 대체)
+============================================================ */
+const AUTH={user:null};
+const LS_KEY='ollblue_db_v2';
+let LS_OK=true, _mem=null;
+function dbLoad(){
+  if(LS_OK){try{const r=localStorage.getItem(LS_KEY);return r?JSON.parse(r):{accounts:{},session:null}}catch(e){LS_OK=false}}
+  return _mem||(_mem={accounts:{},session:null});
+}
+function dbSave(db){
+  if(LS_OK){try{localStorage.setItem(LS_KEY,JSON.stringify(db));return}catch(e){LS_OK=false}}
+  _mem=db;
+}
+function serializeState(){return{
+  saved:[...STATE.saved],ratings:STATE.ratings,status:STATE.status,progress:STATE.progress,
+  notify:[...STATE.notify],followCreators:[...STATE.followCreators],top3:STATE.top3,customWorks:STATE.customWorks,
+  seriesProgress:[...STATE.seriesProgress],myReviews:STATE.myReviews,viewLog:STATE.viewLog,profile:STATE.profile,
+  attendance:[...STATE.attendance],streak:STATE.streak,taste:STATE.taste||null,following:[...STATE.following]};}
+function applyState(d){
+  d=d||{};
+  STATE.saved=new Set(d.saved||[]);STATE.ratings=d.ratings||{};STATE.status=d.status||{};STATE.progress=d.progress||{};
+  STATE.notify=new Set(d.notify||[]);STATE.followCreators=new Set(d.followCreators||[]);STATE.top3=d.top3||[];
+  STATE.customWorks=d.customWorks||[];STATE.seriesProgress=new Set(d.seriesProgress||[]);STATE.myReviews=d.myReviews||0;
+  STATE.viewLog=d.viewLog||{};STATE.profile=d.profile||{name:'항해사',bio:''};STATE.attendance=new Set(d.attendance||[]);
+  STATE.streak=d.streak||0;STATE.taste=d.taste||null;STATE.following=new Set(d.following||['민지','성욱']);
+  STATE.moodFilter=null;STATE.mpFilter='all';STATE.reportMonth=5;STATE.search='';
+}
+function freshData(name){return{saved:[],ratings:{},status:{},progress:{},notify:[],followCreators:[],top3:[],customWorks:[],
+  seriesProgress:[],myReviews:0,viewLog:{},profile:{name,bio:'이제 막 항해를 시작했어요'},attendance:[],streak:0,taste:null,following:[]};}
+function saveAccount(){if(!AUTH.user)return;const db=dbLoad();if(db.accounts[AUTH.user]){db.accounts[AUTH.user].data=serializeState();db.session=AUTH.user;dbSave(db)}}
+
+/* 실제 감상 기록 — 활동 시 오늘(2026-06-28) 로그에 적재 → 월간 리포트 반영 */
+function logView(wid){
+  if(!byId(wid))return;
+  const key='5-28';const arr=STATE.viewLog[key]=STATE.viewLog[key]||[];
+  if(arr.some(e=>e.wid===wid))return;
+  arr.push({wid,ep:byId(wid).ep||30});
+}
+
+/* 인증 화면 */
+function val(id){const e=document.getElementById(id);return e?e.value:''}
+function openAuth(){const s=document.getElementById('authScreen');s.classList.add('open');authTab('login');document.body.style.overflow='hidden'}
+function closeAuth(){const s=document.getElementById('authScreen');s.classList.remove('open');document.body.style.overflow=''}
+function authTab(t){
+  document.getElementById('atLogin').classList.toggle('on',t==='login');
+  document.getElementById('atSignup').classList.toggle('on',t==='signup');
+  const b=document.getElementById('authBody');
+  if(t==='login'){
+    b.innerHTML=`<input class="auth-inp" id="liId" placeholder="아이디 (이메일)">
+      <input class="auth-inp" id="liPw" type="password" placeholder="비밀번호" onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="auth-btn" onclick="doLogin()">로그인</button>
+      <div class="auth-hint">계정이 없다면 ‘회원가입’ 탭을 눌러주세요</div>`;
+  }else{
+    b.innerHTML=`<input class="auth-inp" id="suName" placeholder="닉네임 (표시 이름)">
+      <input class="auth-inp" id="suId" placeholder="아이디 (이메일)">
+      <input class="auth-inp" id="suPw" type="password" placeholder="비밀번호" onkeydown="if(event.key==='Enter')doSignup()">
+      <button class="auth-btn" onclick="doSignup()">회원가입</button>
+      <div class="auth-hint">가입하면 내 활동(보고싶어요·평가·소장·감상기록)이 이 계정에 저장돼요</div>`;
+  }
+}
+function doSignup(){
+  const id=val('suId').trim().toLowerCase(),pw=val('suPw'),name=val('suName').trim()||(id.split('@')[0]||'항해사');
+  if(!id||!pw){toast('아이디와 비밀번호를 입력해주세요');return}
+  const db=dbLoad();
+  if(db.accounts[id]){toast('이미 가입된 아이디예요. 로그인해주세요');authTab('login');return}
+  db.accounts[id]={pw,data:freshData(name)};db.session=id;dbSave(db);
+  AUTH.user=id;applyState(db.accounts[id].data);
+  closeAuth();bootApp();toast(`🎉 환영해요 ${name}님! 새 항해를 시작해요`);
+}
+function doLogin(){
+  const id=val('liId').trim().toLowerCase(),pw=val('liPw');
+  const db=dbLoad();const acc=db.accounts[id];
+  if(!acc||acc.pw!==pw){toast('아이디 또는 비밀번호가 맞지 않아요');return}
+  db.session=id;dbSave(db);
+  AUTH.user=id;applyState(acc.data);
+  closeAuth();bootApp();toast(`${acc.data.profile.name||id}님, 다시 오셨네요 ⚓`);
+}
+function logout(){
+  saveAccount();const db=dbLoad();db.session=null;dbSave(db);AUTH.user=null;closeAcct();
+  openAuth();toast('로그아웃 되었어요');
+}
+function guestMode(){AUTH.user=null;applyState(demoData());closeAuth();bootApp();toast('게스트 미리보기 · 활동은 저장되지 않아요')}
+
+/* 토픽바 계정 메뉴 */
+function toggleAcct(){const m=document.getElementById('acctMenu');if(m)m.classList.toggle('open')}
+function closeAcct(){const m=document.getElementById('acctMenu');if(m)m.classList.remove('open')}
+function refreshAcct(){
+  const av=document.getElementById('topAv');if(av)av.textContent=(STATE.profile.name[0]||'?');
+  const nm=document.getElementById('amName'),ac=document.getElementById('amActions');
+  if(!nm||!ac)return;
+  if(AUTH.user){nm.innerHTML=`${STATE.profile.name}<small>${AUTH.user}</small>`;
+    ac.innerHTML=`<button onclick="go('mypage');closeAcct()">마이페이지</button><button class="danger" onclick="logout()">로그아웃</button>`}
+  else{nm.innerHTML=`게스트 모드<small>로그인하면 활동이 저장돼요</small>`;
+    ac.innerHTML=`<button onclick="closeAcct();openAuth()">로그인 / 회원가입</button>`}
+}
+function bootApp(){CURRENT='home';renderTabs();refreshAvatar();refreshAcct();renderHome()}
+
+/* ============================================================
+   부팅
+============================================================ */
+(function boot(){
+  const db=dbLoad();
+  if(!db.accounts['soya']){db.accounts['soya']={pw:'@123456789',data:demoData()};dbSave(db)} // 데모 계정 시드
+  if(db.session&&db.accounts[db.session]){AUTH.user=db.session;applyState(db.accounts[db.session].data);closeAuth();bootApp()}
+  else{openAuth()}
+  setInterval(()=>{if(AUTH.user)saveAccount()},2000);
+  window.addEventListener('beforeunload',()=>{if(AUTH.user)saveAccount()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeAcct()}});
+  document.addEventListener('click',e=>{const w=document.getElementById('acctWrap');if(w&&!w.contains(e.target))closeAcct()});
+})();
+</script>
+</body>
+</html>
