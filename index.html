@@ -346,6 +346,24 @@ button.chip:hover{background:var(--bg-soft2)}
 .mp-stat .n{font-size:23px;font-weight:900}
 .mp-stat .l{font-size:12px;color:var(--ink-3);font-weight:600;margin-top:1px}
 .badge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:13px}
+
+/* v4: 홈 CTA / 랭킹 / 탐색 필터 / 준비중 */
+.hero-cta{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.rank-list{display:flex;flex-direction:column;gap:8px}
+.rank-item{display:flex;align-items:center;gap:13px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:11px 15px;cursor:pointer;box-shadow:var(--shadow);transition:.15s}
+.rank-item:hover{transform:translateX(3px);border-color:var(--line-2)}
+.rank-item .rk{font-weight:900;font-size:18px;color:var(--blue);width:22px;text-align:center;flex-shrink:0}
+.rank-item .pp{width:40px;height:54px;border-radius:8px;display:grid;place-items:center;color:#fff;font-size:10px;font-weight:800;flex-shrink:0}
+.rank-item .t{font-weight:800;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank-item .g{font-size:12px;color:var(--ink-3);font-weight:600;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank-item .sc{margin-left:auto;font-weight:800;font-size:14px;color:#ffaf1a;flex-shrink:0}
+.bf-label{font-size:12px;font-weight:800;color:var(--ink-3);margin:14px 0 7px}
+.bf-chips{display:flex;gap:7px;flex-wrap:wrap}
+.bf-chips .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.bf-bar{display:flex;align-items:center;justify-content:space-between;margin:18px 0 14px}
+.bf-bar .cnt{font-size:13px;font-weight:800;color:var(--ink-2)}
+.bf-sort{font-size:12.5px;font-weight:700;border:1.5px solid var(--line-2);border-radius:9px;padding:8px 12px;background:#fff;color:var(--ink);cursor:pointer}
+.hall-card.soon{filter:saturate(.55);opacity:.82}
 .badge-item{text-align:center;padding:16px 10px;border-radius:14px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
 .badge-item .ic{width:48px;height:48px;border-radius:50%;margin:0 auto 9px;display:grid;place-items:center;font-size:22px;color:#fff}
 .badge-item.locked{opacity:.5;filter:grayscale(.6)}
@@ -988,19 +1006,21 @@ const SERIES=[
 /* ============================================================
    라우팅 & 탭
 ============================================================ */
-const TABS=[['home','홈'],['taste','취향분석'],['works','작품관'],['follow','팔로우 전용관'],['hall','콘텐츠관'],['mypage','마이페이지']];
+const TABS=[['home','홈'],['anime','애니'],['webtoon','웹툰'],['feed','피드'],['hall','콘텐츠관'],['mypage','마이페이지']];
 let CURRENT='home';
 function renderTabs(){
   document.getElementById('tabs').innerHTML = TABS.map(([k,l])=>
-    `<button class="tab ${k===CURRENT?'active':''}" onclick="go('${k}')">${l}${(k==='hall'||k==='taste')?'<span class="dot"></span>':''}</button>`).join('');
+    `<button class="tab ${k===CURRENT?'active':''}" onclick="go('${k}')">${l}${k==='hall'?'<span class="dot"></span>':''}</button>`).join('');
 }
 let HISTORY=[];
 let SCREEN={kind:'tab',view:'home'};
 function _goTab(view){
   CURRENT=view; renderTabs();
   window.scrollTo({top:0,behavior:'smooth'});
-  if(view==='taste') resetTaste();
-  ({home:renderHome,works:renderWorks,follow:renderFollow,hall:renderHall,mypage:renderMypage,taste:renderTaste})[view]();
+  if(view==='anime') return renderBrowse('anime');
+  if(view==='webtoon') return renderBrowse('webtoon');
+  if(view==='feed') return renderFeed();
+  ({home:renderHome,hall:renderHall,mypage:renderMypage})[view]();
 }
 function _renderScreen(s){
   if(s.kind==='detail') _openDetail(s.id);
@@ -1020,7 +1040,10 @@ function goBack(){
   SCREEN=HISTORY.pop(); updateBackBtn(); _renderScreen(SCREEN);
 }
 function updateBackBtn(){const b=document.getElementById('backBtn');if(b)b.style.display=HISTORY.length?'grid':'none'}
-function go(view){ navTo({kind:'tab',view}); }
+function go(view){
+  if(view==='works')view='anime'; if(view==='follow')view='feed'; if(view==='taste')view='home';
+  navTo({kind:'tab',view});
+}
 
 /* ============================================================
    공통 위젯
@@ -1094,19 +1117,11 @@ function renderHome(){
     <div class="eyebrow">⚓ 발견과 아카이빙의 바다</div>
     <h1>본 작품을 기록하고,<br>다음에 볼 작품을 발견하세요</h1>
     <p>구매가 목적이 아니라, 발견과 기록 그 자체가 목적인 곳. 취향이 맞는 사람의 한 줄 영업글로 다음 정주행을 정하세요.</p>
-    <div class="northstar">
-      <div class="ns"><div class="lab">북극성 · 북스타</div><div class="num">${bookstar.toLocaleString()}<small> 명</small></div><div class="delta">주간 발견·저장 활성 ▲</div></div>
-      <div class="ns"><div class="lab">내가 담은 작품</div><div class="num">${savedCount}<small> 개</small></div><div class="delta">보고싶어요 컬렉션</div></div>
-      <div class="ns"><div class="lab">내가 남긴 평가</div><div class="num">${rated}<small> 개</small></div><div class="delta">큐레이터 활동</div></div>
+    <div class="hero-cta">
+      <button class="btn btn-blue" onclick="go('anime')">애니 둘러보기</button>
+      <button class="btn btn-line" onclick="go('webtoon')">웹툰 둘러보기</button>
     </div>
   </div>
-
-  ${!STATE.taste?`
-  <div class="card" style="display:flex;align-items:center;gap:16px;padding:18px 22px;margin-bottom:34px;background:linear-gradient(120deg,#eef4ff,#fff)">
-    <div style="font-size:32px">🔮</div>
-    <div style="flex:1"><div style="font-weight:800;font-size:16px">3분 취향 분석, 아직 안 했어요?</div><div style="font-size:13px;color:var(--ink-2);font-weight:600;margin-top:2px">몇 가지만 답하면 딱 맞는 웹툰·애니를 골라드려요.</div></div>
-    <button class="btn btn-blue" style="flex-shrink:0" onclick="go('taste')">분석 시작</button>
-  </div>`:''}
 
   ${watching.length?`
   <div class="section">
@@ -1124,14 +1139,7 @@ function renderHome(){
   </div>`:''}
 
   <div class="section">
-    <div class="section-head"><h2>무드로 발견하기</h2><span class="sub">지금 기분·상황에 맞는 입구</span></div>
-    <div class="mood-row">
-      ${MOODS.map(m=>`<div class="mood" style="background:linear-gradient(140deg,${m.g[0]},${m.g[1]})" onclick="setMood('${m.k}')"><span class="e">${m.e}</span><span class="l">${m.l}</span></div>`).join('')}
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-head"><h2>취향 기반 추천</h2><span class="sub">이래서 비슷해요 — 추천 이유까지</span></div>
+    <div class="section-head"><h2>이주의 추천</h2><span class="sub">에디터 큐레이션 · 추천 이유까지</span></div>
     <div class="reco-row">
       ${recos.map(({w,why,d})=>`
         <div class="reco" onclick="openDetail(${w.id})">
@@ -1146,7 +1154,20 @@ function renderHome(){
   </div>
 
   <div class="section">
-    <div class="section-head"><h2>큐레이터의 한 줄 영업</h2><span class="sub">사람 냄새 나는 추천</span></div>
+    <div class="section-head"><h2>지금 인기 작품</h2><span class="sub">평점·관심 기준 큐레이션 랭킹</span></div>
+    <div class="rank-list">
+      ${WORKS.slice().sort((a,b)=>b.rating-a.rating).slice(0,5).map((w,i)=>`
+        <div class="rank-item" onclick="openDetail(${w.id})">
+          <span class="rk">${i+1}</span>
+          <span class="pp" style="background:${grad(w.genres[0])}">${w.type.split(' ')[0]}</span>
+          <div style="flex:1;min-width:0"><div class="t">${w.t}</div><div class="g">${w.type} · ${w.genres.join('·')}</div></div>
+          <span class="sc">★ ${w.rating}</span>
+        </div>`).join('')}
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><h2>인기 코멘트 · 한 줄 영업</h2><span class="sub">사람 냄새 나는 추천</span></div>
     <div class="reco-row">
       ${FEED.map(f=>{const w=byId(f.wid);return `
         <div class="curator">
@@ -1160,57 +1181,83 @@ function renderHome(){
             <div class="pp" style="background:${grad(w.genres[0])}">${w.type.split(' ')[0]}</div>
             <div><div class="t">${w.t}</div><div class="g">${w.type} · ${w.genres.join('·')} · ★${w.rating}</div></div>
           </div>
-          <div class="foot"><button onclick="event.stopPropagation();toast('👍 도움돼요!')">👍 도움돼요</button><button onclick="event.stopPropagation();go('follow')">💬 더 보기</button></div>
+          <div class="foot"><button onclick="event.stopPropagation();toast('👍 도움돼요!')">👍 도움돼요</button><button onclick="event.stopPropagation();go('feed')">💬 더 보기</button></div>
         </div>`}).join('')}
     </div>
   </div>
 
   <div class="section">
-    <div class="section-head"><h2>지금 뜨는 작품</h2><span class="more" onclick="go('works')">전체 보기 →</span></div>
+    <div class="section-head"><h2>신작 · 최근 업데이트</h2><span class="more" onclick="go('anime')">애니 전체 →</span></div>
     <div class="grid works">${WORKS.slice(0,6).map(posterCard).join('')}</div>
   </div>`;
 }
 
 /* ============================================================
-   작품관 (브라우즈 + 검색)
+   작품 탐색 (애니 / 웹툰 분리 · 요일·장르·플랫폼·정렬)
 ============================================================ */
-function renderWorks(){
-  const q = STATE.search.trim().toLowerCase();
-  const mood = STATE.moodFilter?moodById(STATE.moodFilter):null;
-  let list = WORKS.slice();
-  if(mood) list = list.filter(mood.f);
-  if(q) list = list.filter(w=>(w.t+w.genres.join()+w.tags.join()+w.type).toLowerCase().includes(q));
+const WEEK=['월','화','수','목','금','토','일'];
+const WEBTOON_DAYS={4:'월',5:'수',6:'금',9:'화',11:'목',12:'토'};
+WORKS.forEach(w=>{ if(WEBTOON_DAYS[w.id]) w.day=WEBTOON_DAYS[w.id]; });
+function isAnime(w){return w.type.startsWith('애니')}
+function isWebtoon(w){return w.type.includes('웹툰')}
+let BROWSE={kind:'anime',genre:'all',plat:'all',day:'all',sort:'pop',q:''};
+function renderBrowse(kind){
+  BROWSE.kind=kind;
+  const base=WORKS.filter(kind==='anime'?isAnime:isWebtoon);
+  let list=base.slice();
+  const q=(BROWSE.q||'').trim().toLowerCase();
+  if(q) list=list.filter(w=>(w.t+w.genres.join()+w.tags.join()+w.type).toLowerCase().includes(q));
+  if(BROWSE.genre!=='all') list=list.filter(w=>w.genres.includes(BROWSE.genre));
+  if(BROWSE.plat!=='all') list=list.filter(w=>w.plat.some(p=>p[0]===BROWSE.plat));
+  if(kind==='webtoon'&&BROWSE.day!=='all') list=list.filter(w=>w.day===BROWSE.day);
+  if(BROWSE.sort==='rating') list.sort((a,b)=>b.rating-a.rating);
+  else if(BROWSE.sort==='new') list.sort((a,b)=>b.id-a.id);
+  else list.sort((a,b)=>b.count-a.count);
+  const genres=[...new Set(base.flatMap(w=>w.genres))];
+  const plats=[...new Set(base.flatMap(w=>w.plat.map(p=>p[0])))];
   const v=document.getElementById('view');
-  const genres=[...new Set(WORKS.flatMap(w=>w.genres))];
-  const active = q || mood;
   v.innerHTML=`
   <div class="section">
     <div class="section-head">
-      <h2>작품관</h2>
-      <span class="sub">웹툰 ${WORKS.filter(w=>w.type.includes('웹툰')).length} · 애니 ${WORKS.filter(w=>w.type.includes('애니')).length} · 총 ${WORKS.length}편 (MVP)</span>
+      <h2>${kind==='anime'?'애니':'웹툰'}</h2>
+      <span class="sub">${base.length}편 · ${kind==='anime'?'완주 기준으로 기록해요':'요일·플랫폼별로 탐색해요'}</span>
     </div>
-    <div style="font-size:12.5px;color:var(--ink-3);font-weight:700;margin-bottom:9px">🛋️ 무드로 발견하기</div>
-    <div class="mood-row" style="margin-bottom:16px">
-      ${MOODS.map(m=>`<div class="mood" style="height:78px;width:142px;background:linear-gradient(140deg,${m.g[0]},${m.g[1]});${STATE.moodFilter===m.k?'outline:3px solid var(--ink);outline-offset:2px':''}" onclick="setMood('${m.k}')"><span class="e" style="font-size:20px">${m.e}</span><span class="l">${m.l}</span></div>`).join('')}
+    ${q?`<div style="font-size:13px;color:var(--ink-2);font-weight:600;margin-bottom:14px">“${BROWSE.q}” 검색 결과 ${list.length}편 · <button style="color:var(--accent);font-weight:700" onclick="clearFilters()">전체 보기</button></div>`:''}
+    ${kind==='webtoon'?`
+    <div class="bf-label">요일</div>
+    <div class="bf-chips">
+      <button class="chip ${BROWSE.day==='all'?'on':''}" onclick="setBrowse('day','all')">전체</button>
+      ${WEEK.map(d=>`<button class="chip ${BROWSE.day===d?'on':''}" onclick="setBrowse('day','${d}')">${d}</button>`).join('')}
+    </div>`:''}
+    <div class="bf-label">장르</div>
+    <div class="bf-chips">
+      <button class="chip ${BROWSE.genre==='all'?'on':''}" onclick="setBrowse('genre','all')">전체</button>
+      ${genres.map(g=>`<button class="chip ${BROWSE.genre===g?'on':''}" onclick="setBrowse('genre','${g}')">#${g}</button>`).join('')}
     </div>
-    <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px">
-      ${genres.map(g=>`<button class="chip" onclick="document.getElementById('searchInput').value='${g}';onSearch('${g}')">#${g}</button>`).join('')}
+    <div class="bf-label">플랫폼</div>
+    <div class="bf-chips">
+      <button class="chip ${BROWSE.plat==='all'?'on':''}" onclick="setBrowse('plat','all')">전체</button>
+      ${plats.map(p=>`<button class="chip ${BROWSE.plat===p?'on':''}" onclick="setBrowse('plat','${p}')">${p}</button>`).join('')}
     </div>
-    ${active?`<div style="font-size:13px;color:var(--ink-2);font-weight:600;margin-bottom:14px">${mood?`<b style="color:var(--ink)">${mood.e} ${mood.l}</b>`:''}${mood&&q?' · ':''}${q?`“${STATE.search}”`:''} 결과 ${list.length}편 · <button style="color:var(--accent);font-weight:700" onclick="clearFilters()">전체 보기</button></div>`:''}
+    <div class="bf-bar">
+      <span class="cnt">${list.length}편</span>
+      <select class="bf-sort" onchange="setBrowse('sort',this.value)">
+        <option value="pop" ${BROWSE.sort==='pop'?'selected':''}>인기순</option>
+        <option value="rating" ${BROWSE.sort==='rating'?'selected':''}>평점순</option>
+        <option value="new" ${BROWSE.sort==='new'?'selected':''}>최신순</option>
+      </select>
+    </div>
     ${list.length?`<div class="grid works">${list.map(posterCard).join('')}</div>`
-      :`<div class="empty"><div class="e">🌊</div><p>조건에 맞는 작품이 아직 없어요.<br>다른 무드나 키워드로 찾아보세요.</p></div>`}
-  </div>
-
-  <div class="section">
-    <div class="section-head"><h2>시리즈 순서</h2><span class="sub">연관작을 트리로 · 본 항목 체크 → 다음 볼 작품 자동 표시</span></div>
-    ${seriesTreesHTML()}
+      :`<div class="empty"><div class="e">🌊</div><p>조건에 맞는 작품이 없어요.<br>필터를 바꿔보세요.</p></div>`}
   </div>`;
 }
-function setMood(k){STATE.moodFilter=(STATE.moodFilter===k?null:k);STATE.search='';const si=document.getElementById('searchInput');if(si)si.value='';if(CURRENT!=='works')go('works');else renderWorks();}
-function clearFilters(){STATE.moodFilter=null;STATE.search='';const si=document.getElementById('searchInput');if(si)si.value='';renderWorks();}
+function setBrowse(key,val){BROWSE[key]=val;renderBrowse(BROWSE.kind);}
+function clearFilters(){BROWSE.genre='all';BROWSE.plat='all';BROWSE.day='all';BROWSE.q='';const si=document.getElementById('searchInput');if(si)si.value='';renderBrowse(BROWSE.kind);}
+function setMood(){go('anime');}
+function renderWorks(){renderBrowse('anime');}
 function onSearch(val){
-  STATE.search=val;
-  if(CURRENT!=='works') go('works'); else renderWorks();
+  BROWSE.q=val; BROWSE.genre='all'; BROWSE.plat='all'; BROWSE.day='all';
+  if(CURRENT!=='anime'&&CURRENT!=='webtoon') go('anime'); else renderBrowse(BROWSE.kind);
 }
 
 /* ============================================================
@@ -1219,7 +1266,7 @@ function onSearch(val){
 let _detailId=null;
 function openDetail(id){ navTo({kind:'detail',id}); }
 function _openDetail(id){
-  _detailId=id; CURRENT='works'; renderTabs();
+  _detailId=id; CURRENT=isWebtoon(byId(id))?'webtoon':'anime'; renderTabs();
   window.scrollTo({top:0,behavior:'smooth'});
   const w=byId(id);
   const saved=STATE.saved.has(id);
@@ -1421,12 +1468,13 @@ function setProgress(id,i){
 /* ============================================================
    팔로우 전용관
 ============================================================ */
+function renderFeed(){renderFollow();}
 function renderFollow(){
   const v=document.getElementById('view');
   v.innerHTML=`
   <div class="section">
-    <div class="section-head"><h2>팔로우 전용관</h2><span class="sub">큐레이터 · 작가 · 제작사의 새 소식</span></div>
-    <div style="font-size:12.5px;color:var(--ink-3);font-weight:700;margin-bottom:9px">🔔 팔로우한 작가·제작사 신작 알림</div>
+    <div class="section-head"><h2>피드</h2><span class="sub">유저 추천글 · 한 줄 영업 · 작가/제작사 소식</span></div>
+    <div style="font-size:12.5px;color:var(--ink-3);font-weight:700;margin-bottom:9px">⭐ 팔로우한 작가·제작사 (새 소식은 우측 상단 🔔 알림으로)</div>
     <div style="display:flex;gap:13px;overflow-x:auto;padding-bottom:14px;margin-bottom:24px;scrollbar-width:none">
       ${CREATORS.map(c=>{const on=STATE.followCreators.has(c.n);return `
         <div class="cre-card" style="cursor:pointer" onclick="openStudio('${c.n}')">
@@ -1665,19 +1713,19 @@ function toggleSeries(si,ei){
    콘텐츠관 (덕질은 여기서) — 미니 서비스
 ============================================================ */
 const HALL=[
-  {k:'worldcup',emo:'🏆',t:'이상형 월드컵',d:'내 인생작 토너먼트로 가리기',g:['#7c3aed','#c026d3'],live:false},
-  {k:'no1',emo:'📈',t:'내 작품 1등 만들기',d:'유저 영업 지수로 실시간 순위',g:['#e11551','#ff2e63'],live:true},
+  {k:'worldcup',emo:'🏆',t:'기대작 월드컵',d:'신작 썸네일로 더 기대되는 작품 고르기',g:['#7c3aed','#c026d3'],live:true},
+  {k:'no1',emo:'📈',t:'내 작품 1등 만들기',d:'유저 영업 지수로 실시간 순위',g:['#e11551','#ff2e63'],live:false},
   {k:'tagvote',emo:'🏷️',t:'주접 태그 투표소',d:'유저가 만든 작품 태그 투표',g:['#0a66ff','#00c6ff'],live:false},
   {k:'scene',emo:'🎬',t:'오늘의 명장면',d:'유저가 추천한 장면 모음',g:['#d97706','#f59e0b'],live:false},
   {k:'attend',emo:'📅',t:'출석체크 이벤트',d:'매일 출석하고 포인트 받기',g:['#0f766e','#10b981'],live:false},
-  {k:'predict',emo:'🔮',t:'신작 등수 맞추기',d:'이번 분기 신작 순위 예측',g:['#1d4ed8','#3b82f6'],live:true},
+  {k:'predict',emo:'🔮',t:'신작 등수 맞추기',d:'이번 분기 신작 순위 예측',g:['#1d4ed8','#3b82f6'],live:false},
 ];
 function renderHall(){
   const v=document.getElementById('view');
   const locked=!AUTH.user;
   v.innerHTML=`
   <div class="section">
-    <div class="section-head"><h2>콘텐츠관</h2><span class="sub">덕질은 여기서 — 본질 흐리지 않게 분리한 재미 탭</span></div>
+    <div class="section-head"><h2>콘텐츠관</h2><span class="sub">MVP에서는 ‘기대작 월드컵’ 1개부터 — 나머지는 준비 중</span></div>
     ${locked?`<div class="card" style="display:flex;align-items:center;gap:14px;padding:16px 20px;margin-bottom:18px;background:linear-gradient(120deg,#eef4ff,#fff)">
       <div style="font-size:26px">🔒</div>
       <div style="flex:1"><div style="font-weight:800;font-size:15px">콘텐츠관은 로그인 후 이용할 수 있어요</div><div style="font-size:13px;color:var(--ink-2);font-weight:600;margin-top:2px">카드를 누르면 로그인 안내가 떠요.</div></div>
@@ -1685,8 +1733,8 @@ function renderHall(){
     </div>`:''}
     <div class="hall-grid">
       ${HALL.map(h=>`
-        <div class="hall-card" style="background:linear-gradient(140deg,${h.g[0]},${h.g[1]})" onclick="openHall('${h.k}')">
-          ${locked?'<span class="live" style="background:rgba(0,0,0,.3)">🔒 로그인</span>':(h.live?'<span class="live">LIVE</span>':'')}
+        <div class="hall-card ${!h.live?'soon':''}" style="background:linear-gradient(140deg,${h.g[0]},${h.g[1]})" onclick="openHall('${h.k}')">
+          ${locked?'<span class="live" style="background:rgba(0,0,0,.3)">🔒 로그인</span>':(h.live?'<span class="live">LIVE</span>':'<span class="live" style="background:rgba(0,0,0,.35)">준비 중</span>')}
           <span class="emo">${h.emo}</span>
           <div><h3>${h.t}</h3><p>${h.d}</p></div>
         </div>`).join('')}
@@ -1694,20 +1742,22 @@ function renderHall(){
   </div>`;
 }
 function openHall(k){
-  if(!AUTH.user){requireLogin('콘텐츠관 서비스(이상형 월드컵·영업 지수·태그 투표 등)는<br>로그인 후 이용할 수 있어요.');return}
+  if(!AUTH.user){requireLogin('콘텐츠관 서비스는 로그인 후 이용할 수 있어요.');return}
+  const item=HALL.find(h=>h.k===k);
+  if(item&&!item.live){toast('🔜 이 콘텐츠는 준비 중이에요. MVP에선 기대작 월드컵부터 만나보세요!');return}
   ({worldcup:hallWorldcup,no1:hallNo1,tagvote:hallTagvote,scene:hallScene,attend:hallAttend,predict:hallPredict})[k]();
 }
 
 /* 이상형 월드컵 */
 let WC={pool:[],round:0,winners:[],i:0,size:8};
 function hallWorldcup(){
-  const pool=[...WORKS].sort(()=>Math.random()-.5).slice(0,8);
+  const pool=[...WORKS].sort((a,b)=>b.id-a.id).slice(0,8).sort(()=>Math.random()-.5);
   WC={pool,round:0,winners:[],i:0,size:8};
   openModal(wcShell()); wcRender();
 }
 function wcShell(){return `
-  <div class="modal-head"><h2>🏆 이상형 월드컵</h2><button class="x" onclick="closeModal()">✕</button></div>
-  <div class="modal-body"><div class="wc-prog"><i id="wcProg" style="width:0%"></i></div><div id="wcStage" class="wc-stage"></div></div>`;
+  <div class="modal-head"><h2>🏆 기대작 월드컵</h2><button class="x" onclick="closeModal()">✕</button></div>
+  <div class="modal-body"><div style="font-size:12.5px;color:var(--ink-3);font-weight:600;text-align:center;margin-bottom:10px">아직 안 본 작품도 OK! 썸네일·제목만 보고 더 기대되는 쪽을 골라요</div><div class="wc-prog"><i id="wcProg" style="width:0%"></i></div><div id="wcStage" class="wc-stage"></div></div>`;
 }
 function wcRender(){
   const stage=document.getElementById('wcStage');
@@ -1716,11 +1766,11 @@ function wcRender(){
   if(total===1){
     const w=WC.pool[0];
     document.getElementById('wcProg').style.width='100%';
-    stage.innerHTML=`<div class="wc-round">🎉 우승</div>
+    stage.innerHTML=`<div class="wc-round">🎉 가장 기대되는 작품</div>
       <div style="max-width:200px;margin:0 auto" class="wc-pick">
         <div class="img" style="background:${grad(w.genres[0])};aspect-ratio:3/4">${w.t}</div></div>
       <h2 style="margin:16px 0 6px;font-size:22px">${w.t}</h2>
-      <p style="color:var(--ink-2);font-size:14px">당신의 인생작이 결정됐어요!</p>
+      <p style="color:var(--ink-2);font-size:14px">이번 회차 당신의 기대작이에요!</p>
       <button class="btn btn-primary" style="margin-top:18px" onclick="openDetail(${w.id});closeModal()">작품 보러가기</button>
       <button class="btn btn-ghost" style="margin-top:8px" onclick="hallWorldcup()">다시 하기</button>`;
     return;
@@ -1907,7 +1957,7 @@ function renderMypage(){
   </div>
 
   <div class="section">
-    <div class="section-head"><h2>내 소장관</h2><span class="sub">실제로 보고 있는 작품을 등록하고 상태로 관리</span></div>
+    <div class="section-head"><h2>나의 아카이브</h2><span class="sub">내가 보고 있는·본·보고 싶은 작품을 모아 관리</span></div>
     <button class="btn btn-blue" style="margin-bottom:16px" onclick="openRegister()">+ 작품 등록하기</button>
     ${ownedHTML()}
   </div>
@@ -1922,10 +1972,8 @@ function renderMypage(){
 
   <div class="section">
     <div class="section-head"><h2>배지 & 칭호</h2><span class="sub">활동으로 모으는 컬렉션</span></div>
-    <div class="badge-tier-h">🥉 일반 배지 <span class="tg" style="background:var(--bg-soft2);color:var(--ink-2)">간단한 활동으로 수집</span></div>
-    <div class="badge-grid">${BADGES.filter(b=>b.tier==='easy').map(badgeCard).join('')}</div>
-    <div class="badge-tier-h" style="margin-top:24px">🥇 황금 배지 <span class="tg" style="background:#fef3c7;color:#b8860b">상위 1% 난이도 · 헤비 유저의 증표</span></div>
-    <div class="badge-grid">${BADGES.filter(b=>b.tier==='gold').map(badgeCard).join('')}</div>
+    <div class="section-head"><h2>배지 & 칭호</h2><span class="sub">획득한 배지가 먼저 · 황금 배지 우선 · 미획득은 잠금</span></div>
+    <div class="badge-grid">${[...BADGES].sort((a,b)=>{const ga=badgeState(a).got?1:0,gb=badgeState(b).got?1:0;if(ga!==gb)return gb-ga;const ta=a.tier==='gold'?0:1,tb=b.tier==='gold'?0:1;return ta-tb;}).map(badgeCard).join('')}</div>
   </div>
 
   <div class="section">
@@ -1959,7 +2007,7 @@ function collectionHTML(){
     const cat=WORKS.filter(w=>STATE.status[w.id]===f).map(posterCard);
     const cus=STATE.customWorks.filter(c=>c.status===f).map(customPoster);
     cards=cat.concat(cus);
-    if(!cards.length) return emptyCol('이 상태의 소장 작품이 없어요','내 소장관에서 작품을 등록해보세요','none');
+    if(!cards.length) return emptyCol('이 상태의 작품이 없어요','나의 아카이브에서 작품을 추가해보세요','none');
   }
   return `<div class="grid works">${cards.join('')}</div>`;
 }
@@ -1967,7 +2015,7 @@ function emptyCol(t,s,dest){return `<div class="empty"><div class="e">📖</div>
 function customPoster(c){
   const cover=c.cover?`background-image:url('${c.cover}');background-size:cover;background-position:center`:`background:${grad(c.genre||'')}`;
   const m=STATUS_META[c.status];
-  return `<div class="poster-card" onclick="toast('직접 등록한 작품 · 내 소장관에서 관리해요')">
+  return `<div class="poster-card" onclick="toast('직접 등록한 작품 · 나의 아카이브에서 관리해요')">
     <div class="poster" style="${cover}">
       <span class="badge">직접 등록</span>
       <span class="ptitle">${c.cover?'':c.title}</span>
@@ -2127,7 +2175,7 @@ function removeOwned(key){
 /* ===== 작품 등록 모달 (검색 / 직접 추가) ===== */
 let REG={mode:'search',cover:null,custom:{title:'',type:'웹툰',genre:'로맨스',status:'watch'}};
 function openRegister(){
-  if(!AUTH.user){requireLogin('내 소장관은 로그인 후 이용할 수 있어요.');return}
+  if(!AUTH.user){requireLogin('나의 아카이브는 로그인 후 이용할 수 있어요.');return}
   REG={mode:'search',cover:null,custom:{title:'',type:'웹툰',genre:'로맨스',status:'watch'}};
   openModal(`<div class="modal-head"><h2>작품 등록</h2><button class="x" onclick="closeModal()">✕</button></div>
     <div class="modal-body">
